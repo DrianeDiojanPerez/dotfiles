@@ -27,34 +27,12 @@ sudo apt install stow
 sudo dnf install stow
 ```
 
-**RHEL/CentOS/Rocky (with EPEL):**
-```bash
-# Enable EPEL repository first
-sudo dnf install epel-release
-sudo dnf install stow
-```
-
-### 🟢 openSUSE
-```bash
-sudo zypper install stow
-```
-
-### 🟡 Alpine Linux
-```bash
-sudo apk add stow
-```
-
 ### 🟣 NixOS
 Add to your `configuration.nix`:
 ```nix
 environment.systemPackages = with pkgs; [
   stow
 ];
-```
-
-### 🔶 Gentoo
-```bash
-sudo emerge app-admin/stow
 ```
 
 ### 📦 Universal (from source)
