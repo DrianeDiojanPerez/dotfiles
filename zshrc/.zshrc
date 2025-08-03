@@ -105,3 +105,4 @@ eval "$(atuin init zsh)"
 export ANDROID_HOME=/Users/$USER/Library/Android/sdk
 export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 export PATH="$HOME/.govm/shim:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
