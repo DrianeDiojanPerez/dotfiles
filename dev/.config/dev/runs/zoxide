@@ -2,6 +2,7 @@
 
 # Script to check for Rust installation and install zoxide
 # If Rust is not installed, it will install Rust first, then zoxide
+# zoxide is a fast, minimal, and secure alternative to cd
 
 set -e  # Exit on any error
 
