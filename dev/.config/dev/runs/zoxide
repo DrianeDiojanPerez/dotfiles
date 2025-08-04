@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Script to check for Rust installation and install zoxide
+# If Rust is not installed, it will install Rust first, then zoxide
+# zoxide is a fast, minimal, and secure alternative to cd
+
+set -e  # Exit on any error
+
+echo "🔍 Checking for Rust installation..."
+
+# Check if cargo is available (indicates Rust is installed)
+if command -v cargo &> /dev/null; then
+    echo "✅ Rust is already installed!"
+    echo "📦 Installing zoxide using cargo..."
+    cargo install zoxide
+    echo "🎉 zoxide has been successfully installed!"
+else
+    echo "❌ Rust is not installed."
+    echo "📥 Installing Rust first..."
+
+    # Install Rust using rustup
+    if command -v curl &> /dev/null; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    elif command -v wget &> /dev/null; then
+        wget -qO- https://sh.rustup.rs | sh -s -- -y
+    else
+        echo "❌ Error: Neither curl nor wget is available. Please install one of them first."
+        exit 1
+    fi
+
+    # Source the cargo environment
+    source "$HOME/.cargo/env"
+
+    echo "✅ Rust has been installed!"
+    echo "📦 Now installing zoxide..."
+
+    # Install zoxide
+    cargo install zoxide
+
+    echo "🎉 Both Rust and zoxide have been successfully installed!"
+fi
+
+echo ""
+echo "📝 To use zoxide, you may need to add it to your shell configuration:"
+echo "   For bash: echo 'eval \"\$(zoxide init bash)\"' >> ~/.bashrc"
+echo "   For zsh:  echo 'eval \"\$(zoxide init zsh)\"' >> ~/.zshrc"
+echo "   For fish: echo 'zoxide init fish | source' >> ~/.config/fish/config.fish"
+echo ""
+echo "   Then restart your shell or run: source ~/.bashrc (or ~/.zshrc)"

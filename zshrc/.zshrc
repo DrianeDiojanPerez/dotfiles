@@ -88,7 +88,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Aliases
 alias ls='ls --color'
-# alias vim='nvim'
+alias vim='nvim'
 alias c='clear'
 # alias ls="exa"
 alias ls="eza --long --color=always --icons=always"
@@ -105,3 +105,4 @@ eval "$(atuin init zsh)"
 export ANDROID_HOME=/Users/$USER/Library/Android/sdk
 export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 export PATH="$HOME/.govm/shim:$PATH"
+export PATH="$HOME/.local/bin:$PATH"

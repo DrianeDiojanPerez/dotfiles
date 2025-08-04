@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Script to check for tmux installation on Arch Linux
+# Uses pacman package manager
+
+set -e  # Exit on any error
+
+echo "🔍 Checking for tmux installation..."
+
+# Check if tmux is already installed
+if command -v tmux &> /dev/null; then
+    echo "✅ tmux is already installed!"
+    tmux -V
+    echo "🎉 You're all set!"
+    exit 0
+fi
+
+echo "❌ tmux is not installed."
+echo "📥 Installing tmux using pacman..."
+
+# Check if we're on Arch Linux
+if ! command -v pacman &> /dev/null; then
+    echo "❌ This script is for Arch Linux systems with pacman."
+    echo "Please use the appropriate package manager for your system."
+    exit 1
+fi
+
+# Install tmux
+echo "🐧 Installing tmux on Arch Linux..."
+sudo pacman -S --noconfirm tmux
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+# Verify installation
+if command -v tmux &> /dev/null; then
+    echo "✅ tmux has been successfully installed!"
+    tmux -V
+else
+    echo "❌ Installation failed. Please try: sudo pacman -S tmux"
+    exit 1
+fi
+
+echo ""
+echo "🚀 Quick start guide:"
+echo "   tmux                    # Start a new session"
+echo "   tmux new -s mysession   # Start a named session"
+echo "   tmux ls                 # List active sessions"
+echo "   tmux attach -t mysession # Attach to a session"
+echo ""
+echo "📝 Basic tmux keybindings (default prefix: Ctrl+b):"
+echo "   Ctrl+b c                # Create new window"
+echo "   Ctrl+b \"                # Split horizontally"
+echo "   Ctrl+b %                # Split vertically"
+echo "   Ctrl+b arrow keys       # Navigate panes"
+echo "   Ctrl+b d                # Detach session"
+echo ""
+echo "🎨 Popular Arch Linux tmux configurations:"
+echo "   sudo pacman -S tmux-plugin-manager  # Plugin manager (if available in AUR)"
+echo "   yay -S oh-my-tmux                   # Popular tmux configuration"
+echo ""
+echo "⚙️  Create config file: ~/.tmux.conf"
+echo "   echo 'set -g mouse on' >> ~/.tmux.conf          # Enable mouse"
+echo "   echo 'set -g default-terminal \"screen-256color\"' >> ~/.tmux.conf  # Better colors"
