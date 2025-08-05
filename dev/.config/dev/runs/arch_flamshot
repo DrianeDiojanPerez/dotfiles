@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Simple flameshot installer for Arch Linux
+
+echo "Installing flameshot..."
+
+# Update system
+sudo pacman -Syu
+
+# Install flameshot
+sudo pacman -S flameshot
+sudo pacman -S xdg-desktop-portal-hyprland
+
+echo "Flameshot installed successfully!"
+echo "Launch with 'flameshot gui' or set up a keyboard shortcut"
+echo "Try: flameshot gui --delay 3000 for 3 second delay"
