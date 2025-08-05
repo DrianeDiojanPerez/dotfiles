@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Simple hyprlock installer for Arch Linux
+
+echo "Installing hyprlock..."
+
+# Update system
+sudo pacman -Syu
+
+# Install hyprlock
+sudo pacman -S hyprlock
+
+echo "Hyprlock installed successfully!"
+echo "Configure it by editing ~/.config/hypr/hyprlock.conf"

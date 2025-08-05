@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Simple eza installer for Arch Linux
+
+echo "Installing eza..."
+
+# Update system
+sudo pacman -Syu
+
+# Install eza
+sudo pacman -S eza
+
+echo "Eza installed successfully!"
+echo "Try: eza --long --all --header"
+echo "Add aliases to ~/.bashrc or ~/.zshrc like: alias ls='eza'"
