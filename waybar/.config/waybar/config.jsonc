@@ -60,7 +60,7 @@
         "format-icons": {
             "default": ["", "", " "]
         },
-        "on-click": "pavucontrol"
+        "on-click": "alacritty --class=Wiremix -e wiremix"
     },
     "custom/lock": {
         "tooltip": false,
