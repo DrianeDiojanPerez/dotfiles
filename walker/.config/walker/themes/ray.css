@@ -1,0 +1,253 @@
+/* Raycast-like Walker Theme - ~/.config/walker/style.css */
+
+@define-color foreground rgba(255, 255, 255, 1.0);
+@define-color background hsla(240, 12.7%, 13.9%, 0.95);
+@define-color selected_bg rgba(0, 122, 255, 1.0);
+@define-color hover_bg rgba(255, 255, 255, 0.08);
+
+#window,
+#box,
+#aiScroll,
+#aiList,
+#search,
+#password,
+#input,
+#prompt,
+#clear,
+#typeahead,
+#list,
+child,
+scrollbar,
+slider,
+#item,
+#text,
+#label,
+#bar,
+#sub,
+#activationlabel {
+  all: unset;
+  font-family: "SF Pro Display", "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#window {
+  color: @foreground;
+}
+
+#box {
+  border-radius: 12px;
+  background: @background;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+}
+
+#search {
+  background: transparent;
+  padding: 20px 24px 16px 24px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 12px 12px 0 0;
+  box-shadow: none;
+  color: @foreground;
+  caret-color: @selected_bg;
+}
+
+#search:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#input {
+  background: transparent;
+  color: @foreground;
+  font-size: 18px;
+}
+
+#input placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+}
+
+#prompt {
+  margin-left: 4px;
+  margin-right: 12px;
+  color: @foreground;
+  opacity: 0.6;
+}
+
+#clear {
+  color: @foreground;
+  opacity: 0.8;
+}
+
+#typeahead {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+#list {
+  padding: 0 8px 12px 8px;
+}
+
+/* This is the key part - proper selection highlighting */
+child {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 2px 0;
+  transition: all 150ms ease;
+  background: transparent;
+}
+
+child:hover {
+  background: @hover_bg;
+}
+
+child:selected {
+  background: @selected_bg !important;
+  color: white !important;
+}
+
+child:selected #text {
+  color: white !important;
+  font-weight: 500;
+}
+
+child:selected #sub {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+child:selected #label {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+}
+
+#icon {
+  margin-right: 12px;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 6px;
+}
+
+#text {
+  color: @foreground;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#label {
+  background: rgba(255, 255, 255, 0.15);
+  color: @foreground;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+  min-width: 16px;
+  text-align: center;
+}
+
+#sub {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+#activationlabel {
+  background: rgba(0, 122, 255, 0.8);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+/* Activation mode (when holding Ctrl/Alt) */
+.activation #box {
+  border-color: @selected_bg;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(0, 122, 255, 0.3);
+}
+
+.activation child {
+  transition: all 100ms ease;
+}
+
+.activation child:hover {
+  background: rgba(0, 122, 255, 0.15);
+}
+
+/* Scrollbar */
+scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+scrollbar slider {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+scrollbar slider:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Module-specific search box colors */
+.runner #search {
+  color: #ff9500;
+}
+
+.websearch #search {
+  color: #34c759;
+}
+
+.finder #search {
+  color: #af52de;
+}
+
+.ssh #search {
+  color: #ff3b30;
+}
+
+.calculator #search {
+  color: #ff9500;
+}
+
+.clipboard #search {
+  color: #5856d6;
+}
+
+.windows #search {
+  color: #32d74b;
+}
+
+/* AI specific */
+.aiItem {
+  padding: 16px;
+  border-radius: 8px;
+  color: @foreground;
+  background: transparent;
+  margin: 4px 0;
+}
+
+.aiItem.user {
+  background: rgba(0, 122, 255, 0.1);
+  border-left: 3px solid @selected_bg;
+  padding-left: 13px;
+}
+
+.aiItem.assistant {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+  padding-left: 13px;
+}
+
+/* Spinner */
+#spinner {
+  color: @selected_bg;
+  padding: 8px;
+}
