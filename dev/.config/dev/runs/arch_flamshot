@@ -8,8 +8,10 @@ echo "Installing flameshot..."
 sudo pacman -Syu
 
 # Install flameshot
-sudo pacman -S flameshot
+yay -S flameshot-git
 sudo pacman -S xdg-desktop-portal-hyprland
+sudo pacman -S wl-clipboard
+sudo pacman -S grim slurp
 
 echo "Flameshot installed successfully!"
 echo "Launch with 'flameshot gui' or set up a keyboard shortcut"
