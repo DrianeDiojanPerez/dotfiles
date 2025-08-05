@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Simple atuin installer for Arch Linux
+
+echo "Installing atuin..."
+
+# Option 1: Install from Arch repos (recommended)
+sudo pacman -Syu
+sudo pacman -S atuin
+
+# Option 2: Use official installer (uncomment if you prefer latest from GitHub)
+# curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+
+echo "Atuin installed successfully!"
+
+# Import existing history
+atuin import auto
+
+echo "Setup complete! Add 'eval \"\$(atuin init bash)\"' to ~/.bashrc or 'eval \"\$(atuin init zsh)\"' to ~/.zshrc"

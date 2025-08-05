@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Simple docker and lazydocker installer for Arch Linux
+
+echo "Installing docker and lazydocker..."
+
+# Update system
+sudo pacman -Syu
+
+# Install docker with compose plugin
+sudo pacman -S docker docker-compose
+
+# Install lazydocker (try AUR first, fallback to script)
+if command -v yay &> /dev/null; then
+    yay -S lazydocker
+else
+    echo "Installing lazydocker via script..."
+    curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+fi
+
+# Enable and start docker service
+sudo systemctl enable docker
+sudo systemctl start docker
+
+# Add user to docker group
+sudo usermod -aG docker $USER
+
+echo "Docker and lazydocker installed successfully!"
+echo "Log out and back in for docker group changes to take effect"
+echo "Use 'docker compose' for compose commands"
+echo "Run 'lazydocker' to start the TUI"
