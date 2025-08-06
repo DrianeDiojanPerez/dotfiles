@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo pacman -S ttf-dejavu
+
 # Check if directory exists
 if [ ! -d "$HOME/code/nerd-fonts" ]; then
     echo "Cloning Nerd Fonts repository..."
