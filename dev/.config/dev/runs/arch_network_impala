@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Simple IWD + Impala Setup Script for Arch Linux
+# Fixes "org.freedesktop.DBus.Error.ServiceUnknown" for iwd
+# Also installs impala TUI for WiFi management
+
+echo "Setting up iwd and impala on Arch Linux..."
+
+# Install iwd and impala if not installed
+if ! pacman -Q iwd >/dev/null 2>&1; then
+    echo "Installing iwd..."
+    sudo pacman -S --noconfirm iwd
+fi
+
+if ! pacman -Q impala >/dev/null 2>&1; then
+    echo "Installing impala (TUI for iwd)..."
+    sudo pacman -S --noconfirm impala
+fi
+
+# Stop wpa_supplicant if running
+if systemctl is-active --quiet wpa_supplicant; then
+    echo "Stopping wpa_supplicant..."
+    sudo systemctl stop wpa_supplicant
+    sudo systemctl disable wpa_supplicant
+fi
+
+# Enable and start iwd
+echo "Starting iwd service..."
+sudo systemctl enable iwd
+sudo systemctl start iwd
+
+# Configure NetworkManager to use iwd (if NetworkManager is present)
+if systemctl is-active --quiet NetworkManager; then
+    echo "Configuring NetworkManager..."
+    sudo mkdir -p /etc/NetworkManager/conf.d
+    echo -e "[device]\nwifi.backend=iwd" | sudo tee /etc/NetworkManager/conf.d/wifi_backend.conf
+    sudo systemctl restart NetworkManager
+fi
+
+# Wait and check
+sleep 3
+if systemctl is-active --quiet iwd; then
+    echo "✓ iwd is running"
+    echo "✓ impala TUI available"
+    iwctl device list 2>/dev/null || echo "Run 'iwctl device list' or 'impala' to manage WiFi"
+else
+    echo "✗ iwd failed to start"
+    systemctl status iwd
+fi
+
+echo "Done!"
+echo
+echo "Available commands:"
+echo "  iwctl device list    - List WiFi devices"
+echo "  impala              - Launch TUI WiFi manager"
