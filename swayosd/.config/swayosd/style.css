@@ -1,23 +1,24 @@
 @import "./themes/waybar-match/swayosd.css";
 
 window {
-  border: 2px solid @border-color;
-  background-color: @background-color;
+    border: 2px solid @border-color;
+    background-color: @background-color;
 }
 
 label {
-  font-size: 11pt;
+    font-size: 11pt;
+    font-family: JetbrainsMono Nerd Font;
 
-  color: @label;
+    color: @label;
 }
 
 image {
-  color: @image;
+    color: @image;
 }
 
 progressbar {
 }
 
 progress {
-  background-color: @progress;
+    background-color: @progress;
 }
