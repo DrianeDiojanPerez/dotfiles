@@ -8,7 +8,7 @@ echo "Installing docker and lazydocker..."
 sudo pacman -Syu
 
 # Install docker with compose plugin
-sudo pacman -S docker docker-compose
+sudo pacman -S docker docker-compose docker-buildx
 
 # Install lazydocker (try AUR first, fallback to script)
 if command -v yay &> /dev/null; then
