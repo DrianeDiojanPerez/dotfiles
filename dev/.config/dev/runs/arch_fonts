@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Check if directory exists
+if [ ! -d "$HOME/code/nerd-fonts" ]; then
+    echo "Cloning Nerd Fonts repository..."
+    git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git ~/code/nerd-fonts
+fi
+
+echo "Installing all Nerd Fonts..."
+cd ~/code/nerd-fonts
+./install.sh
+
+echo "Updating font cache..."
+fc-cache -fv
+
+echo "Done!"
