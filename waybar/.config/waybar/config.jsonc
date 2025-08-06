@@ -29,7 +29,8 @@
     "clock": {
         "timezone": "America/Denver",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%d - %H:%M}"
+        "format": "{:%d - %I:%M:%S %p}",
+        "interval": 1,
     },
     "network": {
         "format-wifi": "󰤢 ",
@@ -37,7 +38,7 @@
         "format-disconnected": "󰤠 ",
         "interval": 5,
         "tooltip-format": "{signalStrength}% {essid} {ifname} via {gwaddr}/{cidr} ",
-        "on-click": "alacritty --class=Impala -e impala"
+        "on-click": "iwctl station wlan0 scan >/dev/null 2>&1 & alacritty --class=Impala -e impala"
     },
     "cpu": {
         "interval": 1,
