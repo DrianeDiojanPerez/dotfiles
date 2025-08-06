@@ -73,7 +73,15 @@
     },
     "later": {
         "format": "<span class='icon'>{icon}</span> <span class='text'>{text}</span>"
-    }
-
+    },
+    "custom/vpn": {
+        "format": "heheheh{}",
+        "return-type": "json",
+        "exec": "~/.config/waybar/scripts/vpn.sh status",
+        "on-click": "~/.config/waybar/scripts/vpn.sh toggle",
+        "interval": 5,
+        "signal": 8,
+        "tooltip": true
+    },
 }
 
