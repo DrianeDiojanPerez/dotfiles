@@ -58,7 +58,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias code='code-insiders'
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
-alias vpn='sudo vpnc'
+alias vpn='sudo vpnc --enable-weak-encryption'
 alias phpvm='sudo update-alternatives --config php'
 alias vpnd='sudo vpnc-disconnect'
 
