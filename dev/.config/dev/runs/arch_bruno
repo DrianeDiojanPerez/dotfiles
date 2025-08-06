@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Simple Bruno AppImage installer with architecture detection
+set -e
+
+echo "Installing Bruno AppImage..."
+
+# Detect system architecture
+ARCH=$(uname -m)
+case $ARCH in
+    x86_64)
+        # Try multiple naming patterns for x86_64
+        ARCH_PATTERNS=("x64" "amd64" "x86_64" "linux")
+        ;;
+    aarch64|arm64)
+        ARCH_PATTERNS=("arm64" "aarch64")
+        ;;
+    armv7l)
+        ARCH_PATTERNS=("armv7l" "armhf")
+        ;;
+    *)
+        echo "Error: Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
+
+echo "Detected architecture: $ARCH"
+
+# Check and install dependencies
+echo "Checking dependencies..."
+MISSING_DEPS=()
+
+if ! command -v curl &> /dev/null; then
+    MISSING_DEPS+=("curl")
+fi
+
+# Check for FUSE
+if ! [ -f /usr/lib/libfuse.so.2 ] && ! [ -f /usr/lib64/libfuse.so.2 ] && ! [ -f /lib/x86_64-linux-gnu/libfuse.so.2 ]; then
+    MISSING_DEPS+=("fuse2")
+fi
+
+# Also install fuse3 for better compatibility
+if ! command -v fusermount3 &> /dev/null; then
+    MISSING_DEPS+=("fuse3")
+fi
+
+if ! command -v jq &> /dev/null; then
+    MISSING_DEPS+=("jq")
+fi
+
+# Install missing dependencies
+if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
+    echo "Installing missing dependencies: ${MISSING_DEPS[*]}"
+    sudo pacman -S --noconfirm "${MISSING_DEPS[@]}"
+fi
+
+# Get latest release info
+echo "Fetching latest Bruno release info..."
+RELEASE_DATA=$(curl -s https://api.github.com/repos/usebruno/bruno/releases/latest)
+
+# Show available AppImage assets
+echo "Available AppImages:"
+echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | contains(".AppImage")) | .name'
+
+# Try to find AppImage for our architecture
+DOWNLOAD_URL=""
+for pattern in "${ARCH_PATTERNS[@]}"; do
+    DOWNLOAD_URL=$(echo "$RELEASE_DATA" | jq -r ".assets[] | select(.name | contains(\"$pattern\") and contains(\".AppImage\")) | .browser_download_url")
+    if [ "$DOWNLOAD_URL" != "null" ] && [ -n "$DOWNLOAD_URL" ]; then
+        echo "Found match with pattern: $pattern"
+        break
+    fi
+done
+
+# If no specific architecture found, try generic linux AppImage
+if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+    echo "No architecture-specific AppImage found, trying generic linux AppImage..."
+    DOWNLOAD_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | contains(".AppImage")) | .browser_download_url' | head -1)
+fi
+
+if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+    echo "Error: Could not find any AppImage download URL"
+    exit 1
+fi
+
+echo "Download URL: $DOWNLOAD_URL"
+
+# Download AppImage
+echo "Downloading Bruno..."
+curl -L -o bruno.AppImage "$DOWNLOAD_URL"
+
+# Verify download
+if [ ! -f bruno.AppImage ] || [ ! -s bruno.AppImage ]; then
+    echo "Error: Download failed or file is empty"
+    exit 1
+fi
+
+# Make executable
+chmod +x bruno.AppImage
+
+# Move to /opt (requires sudo)
+echo "Installing to /opt (requires sudo)..."
+sudo mv bruno.AppImage /opt/bruno.AppImage
+
+echo "Done! Bruno installed successfully."
