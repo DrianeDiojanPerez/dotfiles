@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# This script is used to run the teams script
+# It is used to run the teams script
+
+# This script is used to run the teams script
+# It is used to run the teams script
+
+echo "Running teams script"
+
+yay -S teams-for-linux

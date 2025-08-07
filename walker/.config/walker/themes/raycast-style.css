@@ -1,0 +1,168 @@
+/* Modern Raycast-inspired theme */
+* {
+  all: unset;
+  font-family: "SF Pro Display", "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+#window {
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  padding: 0;
+}
+
+#search {
+  background: transparent;
+  border: none;
+  padding: 20px 24px 16px 24px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
+  caret-color: #007aff;
+}
+
+#search:focus {
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+#search ::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#list {
+  background: transparent;
+  border: none;
+  padding: 0 8px 12px 8px;
+}
+
+#item {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 2px 0;
+  transition: all 150ms ease;
+}
+
+child:selected,
+child:hover,
+#item:hover {
+  background: rgba(255, 255, 255, 0.08);
+    radius: 8px;
+}
+
+#item:selected {
+  background: #007aff;
+  color: #ffffff;
+}
+
+#item:selected #sub {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+#sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+}
+
+#icon {
+  min-width: 32px;
+  min-height: 32px;
+  padding-right: 12px;
+  border-radius: 6px;
+}
+
+#label {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+  min-width: 16px;
+  text-align: center;
+}
+
+#item:selected #label {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Activation mode styling */
+#window.activation {
+  border-color: #007aff;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
+}
+
+#window.activation #item {
+  transition: all 100ms ease;
+}
+
+#window.activation #item:hover {
+  background: rgba(0, 122, 255, 0.2);
+}
+
+/* Module-specific styling */
+#window.runner #search {
+  color: #ff9500;
+}
+
+#window.websearch #search {
+  color: #34c759;
+}
+
+#window.finder #search {
+  color: #af52de;
+}
+
+#window.ssh #search {
+  color: #ff3b30;
+}
+
+#window.calculator #search {
+  color: #ff9500;
+}
+
+/* AI module styling */
+#window.ai {
+  min-height: 300px;
+}
+
+#window.ai #search {
+  color: #5856d6;
+}
+
+/* Scrollbar styling */
+scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+scrollbar thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+scrollbar thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Spinner */
+#spinner {
+  color: #007aff;
+}

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Install if missing
+if ! command -v alacritty >/dev/null; then
+    echo "Installing alacritty..."
+    sudo pacman -S --noconfirm alacritty
+fi
+
+if ! command -v btop >/dev/null; then
+    echo "Installing btop..."
+    sudo pacman -S --noconfirm btop
+fi
+

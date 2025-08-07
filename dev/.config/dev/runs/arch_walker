@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Install Walker with logging
+
+echo "🚀 Installing Walker..."
+echo "📦 Running: yay -S walker-bin"
+
+if yay -S walker-bin; then
+    echo "✅ Walker installed successfully!"
+    echo "📍 Location: $(which walker)"
+    echo "📦 Version: $(walker --version 2>/dev/null || echo 'Unknown')"
+    echo ""
+    echo "🎯 Ready to use!"
+    echo "   Run: walker"
+else
+    echo "❌ Installation failed!"
+    exit 1
+fi

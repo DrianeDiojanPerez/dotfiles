@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Bruno
+Comment=Open-source API Client
+Exec=/opt/bruno.AppImage
+Icon=bruno
+Type=Application
+Categories=Development;
+Terminal=false

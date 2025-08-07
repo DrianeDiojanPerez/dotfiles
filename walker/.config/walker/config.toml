@@ -1,0 +1,187 @@
+close_when_open = true
+theme = "ray"
+hotreload_theme = true
+as_window = false
+timeout = 0
+disable_click_to_close = false
+force_keyboard_focus = true
+
+[keys]
+accept_typeahead = ["tab"]
+trigger_labels = "lalt"
+next = ["down"]
+prev = ["up"]
+close = ["esc"]
+remove_from_history = ["shift backspace"]
+resume_query = ["ctrl r"]
+toggle_exact_search = ["ctrl m"]
+
+[keys.activation_modifiers]
+keep_open = "shift"
+alternate = "alt"
+
+[list]
+dynamic_sub = true
+keyboard_scroll_style = "emacs"
+max_entries = 200
+show_initial_entries = true
+single_click = true
+visibility_threshold = 20
+placeholder = "No Results"
+
+[search]
+argument_delimiter = "#"
+placeholder = "🔍︎ Search..."
+delay = 0
+resume_last_query = false
+
+[activation_mode]
+labels = "12345678"
+
+# Applications - main launcher
+[builtins.applications]
+weight = 5
+name = "applications"
+placeholder = " Search apps..."
+prioritize_new = true
+hide_actions_with_empty_query = false
+context_aware = true
+refresh = true
+show_sub_when_single = false
+show_icon_when_single = true
+show_generic = true
+history = true
+hidden = false
+
+[builtins.applications.actions]
+enabled = true
+hide_category = false
+hide_without_query = false
+
+# Calculator
+[builtins.calc]
+require_number = false
+weight = 5
+name = "Calculator"
+placeholder = "Calculator"
+min_chars = 1
+prefix = "="
+
+# Runner for commands
+[builtins.runner]
+eager_loading = true
+weight = 5
+name = "runner"
+placeholder = "Run command..."
+typeahead = true
+history = true
+generic_entry = true
+refresh = true
+switcher_only = false
+hidden = false
+prefix = ">"
+
+# File finder
+[builtins.finder]
+use_fd = true
+fd_flags = "--ignore-vcs --type file --type directory"
+weight = 5
+name = "Finder"
+placeholder = "Find files..."
+switcher_only = false
+ignore_gitignore = true
+refresh = true
+concurrency = 8
+show_icon_when_single = true
+preview_images = true
+hidden = false
+prefix = "~"
+
+# Web search
+[builtins.websearch]
+keep_selection = true
+weight = 5
+name = "websearch"
+placeholder = "Search web..."
+switcher_only = false
+hidden = false
+prefix = "?"
+
+[[builtins.websearch.entries]]
+name = "Google"
+url = "https://www.google.com/search?q=%TERM%"
+
+[[builtins.websearch.entries]]
+name = "DuckDuckGo"
+url = "https://duckduckgo.com/?q=%TERM%"
+
+[[builtins.websearch.entries]]
+name = "GitHub"
+url = "https://github.com/search?q=%TERM%"
+
+[[builtins.websearch.entries]]
+name = "Arch Wiki"
+url = "https://wiki.archlinux.org/index.php?search=%TERM%"
+
+# Window switcher
+[builtins.windows]
+weight = 5
+name = "windows"
+placeholder = "Switch windows..."
+show_icon_when_single = true
+switcher_only = false
+hidden = false
+prefix = "/"
+
+# Clipboard history
+[builtins.clipboard]
+always_put_new_on_top = true
+exec = "wl-copy"
+weight = 5
+name = "clipboard"
+avoid_line_breaks = true
+placeholder = "Clipboard history..."
+image_height = 300
+max_entries = 50
+switcher_only = false
+hidden = false
+prefix = "clip"
+
+# SSH connections
+[builtins.ssh]
+weight = 5
+name = "ssh"
+placeholder = "SSH connections..."
+switcher_only = false
+history = true
+refresh = true
+hidden = false
+prefix = "ssh"
+
+# Emojis
+[builtins.emojis]
+exec = "wl-copy"
+weight = 5
+name = "Emojis"
+placeholder = "Emojis..."
+switcher_only = false
+history = true
+typeahead = true
+show_unqualified = false
+hidden = false
+prefix = ":"
+
+# Module switcher
+[builtins.switcher]
+weight = 5
+name = "switcher"
+placeholder = "Switch to module..."
+prefix = "/"
+
+# Custom commands
+[builtins.commands]
+weight = 5
+switcher_only = false
+name = "commands"
+placeholder = "System commands..."
+hidden = false

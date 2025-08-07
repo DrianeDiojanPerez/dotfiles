@@ -58,12 +58,13 @@ alias la='ls -A'
 alias l='ls -CF'
 alias code='code-insiders'
 alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
-alias vpn='sudo vpnc'
+alias vpn='sudo vpnc --enable-weak-encryption'
 alias phpvm='sudo update-alternatives --config php'
 alias vpnd='sudo vpnc-disconnect'
 
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:$(go env GOPATH)/bin"
+export PATH="$HOME/.local/cbin:$PATH"
 export LD_LIBRARY_PATH=/opt/oracle/instantclient_19_8:$LD_LIBRARY_PATH
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -99,8 +100,6 @@ eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 
 eval "$(atuin init zsh)"
-
-. "$HOME/.atuin/bin/env"
 
 export ANDROID_HOME=/Users/$USER/Library/Android/sdk
 export PATH=${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools

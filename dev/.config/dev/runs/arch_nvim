@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Simple Neovim and Ripgrep Install Script for Arch Linux
+# Only installs packages that aren't already installed
+
+echo "Checking for Neovim and Ripgrep..."
+
+# Check and install Neovim
+if pacman -Q neovim >/dev/null 2>&1; then
+    echo "✓ Neovim already installed"
+else
+    echo "Installing Neovim..."
+    sudo pacman -S --noconfirm neovim
+    if command -v nvim >/dev/null 2>&1; then
+        echo "✓ Neovim installed successfully"
+    else
+        echo "✗ Neovim installation failed"
+    fi
+fi
+
+# Check and install Ripgrep
+if pacman -Q ripgrep >/dev/null 2>&1; then
+    echo "✓ Ripgrep already installed"
+else
+    echo "Installing Ripgrep..."
+    sudo pacman -S --noconfirm ripgrep
+    if command -v rg >/dev/null 2>&1; then
+        echo "✓ Ripgrep installed successfully"
+    else
+        echo "✗ Ripgrep installation failed"
+    fi
+fi
+
+echo "Done!"

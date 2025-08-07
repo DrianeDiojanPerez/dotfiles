@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Simple hypridle installer for Arch Linux
+
+echo "Installing hypridle..."
+
+# Update system
+sudo pacman -Syu
+
+# Install hypridle
+sudo pacman -S hypridle
+
+echo "Hypridle installed successfully!"
+echo "Configure it by editing ~/.config/hypr/hypridle.conf"

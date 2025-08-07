@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Simple waybar installation script for Arch Linux
+
+echo "Installing waybar..."
+
+# Update system
+sudo pacman -Syu
+
+# Install waybar
+sudo pacman -S waybar
+
+# Install optional dependencies for full functionality
+sudo pacman -S ttf-font-awesome otf-font-awesome
+
+echo "Waybar installed successfully!"
+echo "You can now configure it by editing ~/.config/waybar/config"

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Simple swaync installer for Arch Linux
+
+echo "Installing swaync..."
+
+# Update system
+sudo pacman -Syu
+
+# Install swaync
+sudo pacman -S swaync
+
+echo "SwayNC installed successfully!"
+echo "Start with: swaync &"
+echo "Toggle panel: swaync-client -t -sw"
+echo "Config location: ~/.config/swaync/"
+echo "Add to Hyprland: exec-once = swaync"

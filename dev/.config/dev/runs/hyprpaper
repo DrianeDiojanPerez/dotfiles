@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Simple hyprpaper installation script for Arch Linux
+
+echo "Installing hyprpaper..."
+
+# Update system
+sudo pacman -Syu
+
+# Install hyprpaper
+sudo pacman -S hyprpaper
+
+echo "Hyprpaper installed successfully!"
+echo "You can now configure it by editing ~/.config/hypr/hyprpaper.conf"

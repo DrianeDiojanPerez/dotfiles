@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Simple fzf installer for Arch Linux
+
+echo "Installing fzf..."
+
+# Update system
+sudo pacman -Syu
+
+# Install fzf
+sudo pacman -S fzf
+
+echo "Fzf installed successfully!"
+echo "Try: fzf --preview 'cat {}'"
+echo "Add to ~/.bashrc or ~/.zshrc:"
+echo "  source /usr/share/fzf/key-bindings.bash"
+echo "  source /usr/share/fzf/completion.bash"

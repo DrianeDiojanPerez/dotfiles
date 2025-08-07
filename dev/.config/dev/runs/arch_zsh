@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+#!/bin/bash
+
+echo "Installing zsh and starship on Arch Linux..."
+
+# Install zsh and starship
+sudo pacman -S --noconfirm zsh starship
+
+# Add starship to existing .zshrc if not already present
+if ! grep -q "starship init zsh" ~/.zshrc 2>/dev/null; then
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+    echo "Added starship to .zshrc"
+else
+    echo "Starship already configured in .zshrc"
+fi
+
+# Change default shell to zsh
+chsh -s /usr/bin/zsh
+
+echo "Zsh and Starship installed successfully!"
+echo "Log out and log back in for changes to take effect."

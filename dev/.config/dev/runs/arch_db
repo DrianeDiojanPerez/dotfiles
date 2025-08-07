@@ -1,0 +1,16 @@
+#!/bin/bash
+echo "Installing DBeaver..."
+
+if pacman -Q dbeaver >/dev/null 2>&1; then
+    echo "✓ DBeaver already installed"
+else
+    echo "Installing DBeaver..."
+    sudo pacman -S --noconfirm dbeaver
+    if command -v dbeaver >/dev/null 2>&1; then
+        echo "✓ DBeaver installed successfully"
+    else
+        echo "✗ DBeaver installation failed"
+    fi
+fi
+
+echo "Done!"
