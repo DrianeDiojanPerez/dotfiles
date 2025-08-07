@@ -1,3 +1,27 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-echo "node"
+# Simple NVM installation script for Arch Linux
+
+echo "Installing dependencies..."
+sudo pacman -S --needed curl git base-devel
+
+echo "Installing NVM..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+echo "Loading NVM..."
+source ~/.bashrc
+
+echo "Installing latest LTS Node.js..."
+nvm install --lts
+nvm use --lts
+
+# nvm install 24.4.1
+
+# Use Node.js 24.4.1
+# nvm use 24.4.1
+
+# Set it as default version
+# nvm alias default 24.4.1
+
+echo "Done! NVM and Node.js LTS installed."
+echo "Restart terminal or run: source ~/.bashrc"
