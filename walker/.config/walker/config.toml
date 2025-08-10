@@ -1,6 +1,6 @@
 close_when_open = true
-theme = "ray"
 hotreload_theme = true
+theme = "light"
 as_window = false
 timeout = 0
 disable_click_to_close = false
@@ -27,11 +27,11 @@ max_entries = 200
 show_initial_entries = true
 single_click = true
 visibility_threshold = 20
-placeholder = "No Results"
+placeholder = ""
 
 [search]
 argument_delimiter = "#"
-placeholder = "🔍︎ Search..."
+placeholder = "Search..."
 delay = 0
 resume_last_query = false
 
