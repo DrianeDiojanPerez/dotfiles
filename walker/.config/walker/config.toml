@@ -1,6 +1,6 @@
 close_when_open = true
 hotreload_theme = true
-theme = "light"
+theme = "dark"
 as_window = false
 timeout = 0
 disable_click_to_close = false
