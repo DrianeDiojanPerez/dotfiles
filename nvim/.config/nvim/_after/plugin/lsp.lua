@@ -77,6 +77,14 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
+
+-- <C-]>     " Jump to tag
+-- <C-t>     " Go back from tag jump
+-- g<C-]>    " List all tag matches
+
+-- gd        " LSP go to definition
+-- gD        " LSP go to declaration
+-- gr        " LSP find references
 lsp.setup()
 
 vim.diagnostic.config({
