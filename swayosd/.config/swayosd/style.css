@@ -8,7 +8,6 @@ window {
 label {
     font-size: 11pt;
     font-family: JetbrainsMono Nerd Font;
-
     color: @label;
 }
 
