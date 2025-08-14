@@ -17,7 +17,6 @@ return {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
     },
     config = function()
-
         local cmp_lsp = require("cmp_nvim_lsp")
         local capabilities = vim.tbl_deep_extend(
             "force",
@@ -27,7 +26,7 @@ return {
         )
         require("fidget").setup({
             notification = {
-            window = {
+                window = {
                     winblend = 0
                 }
             }
