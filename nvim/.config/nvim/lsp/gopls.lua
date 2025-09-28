@@ -91,6 +91,7 @@ return {
 		gopls = {
 			completeUnimported = true,
 			usePlaceholders = true,
+			templateExtensions = { "templ" },
 		},
 	},
 }

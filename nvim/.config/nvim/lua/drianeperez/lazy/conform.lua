@@ -17,7 +17,11 @@ return {
 				php = { "pint" },
 				blade = { "blade-formatter" },
 				go = { "gofmt" },
-                astro = { "prettierd" },
+				astro = { "prettierd" },
+				javascript = { "eslint_d", "prettier" },
+				javascriptreact = { "eslint_d", "prettier" },
+				typescript = { "eslint_d", "prettier" },
+				typescriptreact = { "eslint_d", "prettier" },
 				-- python = { "black" },
 				-- javascript = { "prettierd" },
 			},
@@ -36,14 +40,49 @@ return {
 					stdin = false,
 				},
 			},
+			prettier = {
+				-- Remove prepend_args to let project config take precedence
+				-- Or use conditional args
+				prepend_args = function(self, ctx)
+					-- Check if project has prettier config
+					local has_config = vim.fs.find({
+						".prettierrc",
+						".prettierrc.json",
+						".prettierrc.yml",
+						".prettierrc.yaml",
+						".prettierrc.js",
+						".prettierrc.mjs", -- Added ES module support
+						".prettierrc.cjs",
+						"prettier.config.js",
+						"prettier.config.mjs", -- Added ES module support
+						"prettier.config.cjs",
+					}, { upward = true, path = ctx.dirname })[1]
+
+					print("Searching for Prettier configs...")
+
+					if has_config then
+						return {} -- Use project config
+					else
+						-- Fallback defaults
+						return {
+							"--single-quote",
+							"--jsx-single-quote",
+							"--trailing-comma",
+							"es5",
+						}
+					end
+				end,
+			},
 		})
 
-        vim.keymap.set({ "n", "v" }, "<leader>=", function()
+		vim.keymap.set({ "n", "v" }, "<leader>=", function()
 			conform.format({
 				lsp_fallback = true,
 				async = false,
 				timeout_ms = 1000,
-			})
+			}, function(err)
+
+                end)
 		end, { desc = "Format file or range (in visual mode)" })
 	end,
 }

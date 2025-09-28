@@ -1,5 +1,7 @@
 vim.opt.guicursor = ""
 
+vim.filetype.add({ extension = { templ = "templ" } })
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
@@ -33,4 +35,3 @@ vim.opt.colorcolumn = "0"
 vim.opt.spell = true
 vim.opt.spelllang = "en"
 vim.opt.spellfile = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")
-
