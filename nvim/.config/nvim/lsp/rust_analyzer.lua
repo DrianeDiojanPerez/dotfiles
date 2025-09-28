@@ -104,7 +104,7 @@ return {
 		})
 
 		vim.api.nvim_set_hl(0, "LspInlayHint", {
-			fg = "#6c7086", -- Change this color to match your theme
+			fg = "#908CAA", -- Change this color to match your theme
 			bg = "NONE", -- Remove background
 			italic = true, -- Optional: make italic
 		})

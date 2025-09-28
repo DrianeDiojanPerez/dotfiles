@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Reload user systemd
+systemctl --user daemon-reload
+
+# Enable and start the timer
+systemctl --user enable battery-monitor.timer
+systemctl --user start battery-monitor.timer
+
+# Check status
+systemctl --user status battery-monitor.timer
