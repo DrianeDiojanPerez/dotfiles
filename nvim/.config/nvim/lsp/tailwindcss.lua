@@ -1,7 +1,6 @@
 return {
 	cmd = { "tailwindcss-language-server", "--stdio" },
 	filetypes = {
-		-- html
 		"aspnetcorerazor",
 		"astro",
 		"astro-markdown",
@@ -40,11 +39,18 @@ return {
 		-- mixed
 		"vue",
 		"svelte",
+		"rust",
 		"templ",
+		"rs",
+	},
+	init_options = {
+		userLanguages = {
+			rust = "html", -- Treat Rust as HTML for class detection
+		},
 	},
 	settings = {
 		tailwindCSS = {
-			validate = true,
+			-- validate = true,
 			lint = {
 				cssConflict = "warning",
 				invalidApply = "error",
@@ -68,6 +74,26 @@ return {
 				heex = "phoenix-heex",
 				htmlangular = "html",
 				templ = "html",
+				rust = "html",
+			},
+			experimental = {
+				classRegex = {
+					-- For Rust macros or string literals with classes
+					'class=\\"([^"]*)\\"',
+					'class="([^"]*)"',
+					'class: "([^"]*)"',
+					'class:\\s*"([^"]*)"', -- class: "..."
+					'class:\\s*"([^"]*)",', -- class: "...",
+					[[class:\s*"([^"]*)"]], -- Alternative pattern
+					[[class:\s*r#"([^"]*)"#]],
+					[[class:\s*"([^"]*)"]],
+					[[class:\s*'([^']*)']],
+					[[class=\\"([^\\"]*)\\"]],
+					[[class="([^"]*)"]],
+					'class:\\s*"([^"]*)"',
+					[[class:\s*"([^"]*)"]],
+					'class:\\s*"([^"]*)"',
+				},
 			},
 		},
 	},
@@ -101,12 +127,35 @@ return {
 			"theme/static_src/postcss.config.js",
 			-- Fallback for tailwind v4, where tailwind.config.* is not required anymore
 			".git",
+			"Cargo.toml",
 		}
 
-		local util = require("lspconfig.util")
 		local fname = vim.api.nvim_buf_get_name(bufnr)
-		root_files = util.insert_package_json(root_files, "tailwindcss", fname)
-		root_files = util.root_markers_with_field(root_files, { "mix.lock", "Gemfile.lock" }, "tailwind", fname)
+		-- Check package.json for tailwindcss dependency
+		local package_json = vim.fs.find("package.json", { path = fname, upward = true })[1]
+		if package_json then
+			local ok, content = pcall(vim.fn.readfile, package_json)
+			if ok then
+				local json_str = table.concat(content, "\n")
+				if json_str:match('"tailwindcss"') then
+					table.insert(root_files, "package.json")
+				end
+			end
+		end
+
+		-- Check mix.lock and Gemfile.lock for "tailwind"
+		for _, lockfile in ipairs({ "mix.lock", "Gemfile.lock" }) do
+			local lock = vim.fs.find(lockfile, { path = fname, upward = true })[1]
+			if lock then
+				local ok, content = pcall(vim.fn.readfile, lock)
+				if ok then
+					local lock_str = table.concat(content, "\n")
+					if lock_str:match("tailwind") then
+						table.insert(root_files, lockfile)
+					end
+				end
+			end
+		end
 		on_dir(vim.fs.dirname(vim.fs.find(root_files, { path = fname, upward = true })[1]))
 	end,
 }

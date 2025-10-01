@@ -47,3 +47,33 @@ require("lazy").setup({
 -- 		end
 -- 	end,
 -- })
+--
+-- After your lspconfig setup, add this autocmd
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = "rust",
+--   callback = function()
+--     vim.lsp.start({
+--       name = "tailwindcss",
+--       cmd = { "tailwindcss-language-server", "--stdio" },
+--       root_dir = vim.fs.dirname(vim.fs.find({"tailwind.config.js", "Cargo.toml"}, { upward = true })[1]),
+--       init_options = {
+--         userLanguages = {
+--           rust = "html",
+--         },
+--       },
+--       settings = {
+--         tailwindCSS = {
+--           includeLanguages = {
+--             rust = "html",
+--           },
+--           experimental = {
+--             classRegex = {
+--               [[class:\s*"([^"]*)"]],
+--               'class:\\s*"([^"]*)"',
+--             },
+--           },
+--         },
+--       },
+--     })
+--   end,
+-- })

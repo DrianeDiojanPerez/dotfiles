@@ -1,0 +1,20 @@
+#!/bin/bash
+
+gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
+gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+yay -S --noconfirm --needed nwg-look
+yay -S --noconfirm --needed qt5ct qt6ct
+yay -S --noconfirm --needed papirus-icon-theme
+yay -S --noconfirm --needed adwaita-icon-theme
+yay -S --noconfirm --needed arc-gtk-theme
+yay -S --noconfirm --needed adwaita-dark
+yay -S --noconfirm --needed arc-gtk-theme
+yay -S --noconfirm --needed materia-gtk-theme
+yay -S --noconfirm --needed catppuccin-gtk-theme-mocha
+yay -S --noconfirm --needed tokyonight-gtk-theme-git
+# yay -S --noconfirm --needed dracula-gtk-theme
+yay -S --noconfirm --needed graphite-gtk-theme-git
+yay -S --noconfirm --needed adw-gtk-theme
+yay -S --noconfirm --needed orchis-theme-git
+yay -S --noconfirm --needed gruvbox-gtk-theme
+#Run nwg-look - it gives you a GUI to select icon themes, GTK themes, cursor themes, etc.

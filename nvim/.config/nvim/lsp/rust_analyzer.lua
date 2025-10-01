@@ -152,7 +152,7 @@ return {
 			},
 			-- Other useful rust-analyzer settings
 			checkOnSave = {
-				command = "cargo check",
+				command = "check",
 			},
 			diagnostics = {
 				enable = true,
