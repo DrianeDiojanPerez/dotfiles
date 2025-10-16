@@ -22,6 +22,18 @@ return {
 				javascriptreact = { "eslint_d", "prettier" },
 				typescript = { "eslint_d", "prettier" },
 				typescriptreact = { "eslint_d", "prettier" },
+				rust = function()
+					local cargo_toml = vim.fn.getcwd() .. "/Cargo.toml"
+					if vim.fn.filereadable(cargo_toml) == 1 then
+						local lines = vim.fn.readfile(cargo_toml)
+						for _, line in ipairs(lines) do
+							if line:match("dioxus") then
+								return { "dx_fmt" }
+							end
+						end
+					end
+					return { "rustfmt" }
+				end,
 				-- python = { "black" },
 				-- javascript = { "prettierd" },
 			},
@@ -38,6 +50,12 @@ return {
 					}, "pint"),
 					args = { "$FILENAME" },
 					stdin = false,
+				},
+				dx_fmt = {
+					command = "dx",
+					args = { "fmt", "--file", "$FILENAME" },
+					stdin = false,
+					require_cwd = true,
 				},
 			},
 			prettier = {
@@ -80,9 +98,7 @@ return {
 				lsp_fallback = true,
 				async = false,
 				timeout_ms = 1000,
-			}, function(err)
-
-                end)
+			}, function(err) end)
 		end, { desc = "Format file or range (in visual mode)" })
 	end,
 }

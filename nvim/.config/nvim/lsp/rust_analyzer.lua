@@ -151,7 +151,12 @@ return {
 				},
 			},
 			-- Other useful rust-analyzer settings
+			["cargo"] = {
+				["allFeatures"] = true,
+			},
 			checkOnSave = {
+				["allFeatures"] = true,
+				["extraArgs"] = { "--all-features" },
 				command = "check",
 			},
 			diagnostics = {
