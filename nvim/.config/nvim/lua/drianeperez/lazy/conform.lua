@@ -23,13 +23,22 @@ return {
 				typescript = { "eslint_d", "prettier" },
 				typescriptreact = { "eslint_d", "prettier" },
 				rust = function()
-					local cargo_toml = vim.fn.getcwd() .. "/Cargo.toml"
-					if vim.fn.filereadable(cargo_toml) == 1 then
-						local lines = vim.fn.readfile(cargo_toml)
-						for _, line in ipairs(lines) do
-							if line:match("dioxus") then
-								return { "dx_fmt" }
-							end
+					-- local cargo_toml = vim.fn.getcwd() .. "/Cargo.toml"
+					-- if vim.fn.filereadable(cargo_toml) == 1 then
+					-- 	local lines = vim.fn.readfile(cargo_toml)
+					-- 	for _, line in ipairs(lines) do
+					-- 		if line:match("dioxus") then
+					-- 			return { "dx_fmt" }
+					-- 		end
+					-- 	end
+					-- end
+					-- Get the current buffer content
+					local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+					-- Check if any line contains rsx!
+					for _, line in ipairs(lines) do
+						if line:match("rsx!") then
+							return { "dx_fmt" }
 						end
 					end
 					return { "rustfmt" }
