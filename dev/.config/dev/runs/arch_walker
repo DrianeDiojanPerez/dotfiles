@@ -5,7 +5,13 @@
 echo "🚀 Installing Walker..."
 echo "📦 Running: yay -S walker-bin"
 
-if yay -S walker-bin; then
+yay -S elephant
+
+# Providers, f.e.
+
+yay -S elephant-desktopapplications
+
+if yay -S walker; then
     echo "✅ Walker installed successfully!"
     echo "📍 Location: $(which walker)"
     echo "📦 Version: $(walker --version 2>/dev/null || echo 'Unknown')"
