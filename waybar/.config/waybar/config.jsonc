@@ -28,7 +28,6 @@
         "spacing": 10
     },
     "clock": {
-        "timezone": "America/Denver",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format": "{:%d - %I:%M:%S %p}",
         "interval": 1,

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Helium
+Comment=A simple, beautiful and customizable launcher
+Exec=~/Downloads/helium-0.5.7.1-x86_64.AppImage
+Terminal=false
+Type=Application
+Icon=helium
+Categories=GTK;
+StartupNotify=false

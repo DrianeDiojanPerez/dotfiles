@@ -6,3 +6,4 @@ Icon=bruno
 Type=Application
 Categories=Development;
 Terminal=false
+MimeType=x-scheme-handler/bruno;
