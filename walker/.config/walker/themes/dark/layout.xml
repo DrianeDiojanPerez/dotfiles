@@ -79,6 +79,7 @@
                 </child>
                 <child>
                   <object class="GtkScrolledWindow" id="Scroll">
+
                     <style>
                       <class name="scroll"></class>
                     </style>
