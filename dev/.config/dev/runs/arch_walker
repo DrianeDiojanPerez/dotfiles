@@ -6,6 +6,17 @@ echo "🚀 Installing Walker..."
 echo "📦 Running: yay -S walker-bin"
 
 yay -S elephant
+yay -S elephant-calc
+yay -S elephant-files
+yay -S elephant-runner
+yay -S elephant-websearch
+yay -S elephant-clipboard
+yay -S elephant-symbols
+yay -S elephant-unicode
+yay -S elephant-emojis
+yay -S elephant-providerlist
+yay -S elephant-todo
+yay -S elephant-bluetooth elephant-archlinuxpkgs elephant-bookmarks
 
 # Providers, f.e.
 
