@@ -22,9 +22,9 @@ return {
                 end
                 return false -- can't save
             end,
-            write_all_buffers = false, -- write all buffers when the current one meets `condition`
-            noautocmd = false, -- do not execute autocmds when saving
-            debounce_delay = 1200, -- delay after which a pending save is executed
+            write_all_buffers = false, -- Write all buffers when the current one meets `condition`
+            noautocmd = false, -- Do not execute autocmds when saving
+            debounce_delay = 1200, -- Delay after which a pending save is executed
             -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
             debug = false,
         }
