@@ -35,3 +35,5 @@ vim.opt.colorcolumn = "0"
 vim.opt.spell = true
 vim.opt.spelllang = "en"
 vim.opt.spellfile = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")
+
+vim.opt.background = "dark"

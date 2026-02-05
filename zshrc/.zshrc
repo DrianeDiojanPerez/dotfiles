@@ -110,3 +110,10 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 . "$HOME/.atuin/bin/env"
+
+# bun completions
+[ -s "/home/ddperez/.bun/_bun" ] && source "/home/ddperez/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

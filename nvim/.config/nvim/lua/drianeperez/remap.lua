@@ -3,6 +3,8 @@ vim.g.mapleader = " "
 -- vim.g.mapleader = " "
 -- vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
+local MAP = 2
+
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
@@ -11,26 +13,26 @@ vim.keymap.set("n", "J", "mzJ`z")
 -- vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-d>", function ()
 local height = vim.api.nvim_win_get_height(0)
-    local jump = math.floor(height / 4)
+    local jump = math.floor(height / MAP)
     vim.cmd("normal! " .. jump .. "jzz")
 end)
 
 vim.keymap.set("v", "<C-d>", function ()
 local height = vim.api.nvim_win_get_height(0)
-    local jump = math.floor(height / 4)
+    local jump = math.floor(height / MAP)
     vim.cmd("normal! " .. jump .. "jzz")
 end)
 
 -- vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "<C-u>", function ()
 local height = vim.api.nvim_win_get_height(0)
-    local jump = math.floor(height / 4)
+    local jump = math.floor(height / MAP)
     vim.cmd("normal! " .. jump .. "kzz")
 end)
 
 vim.keymap.set("v", "<C-u>", function ()
 local height = vim.api.nvim_win_get_height(0)
-    local jump = math.floor(height / 4)
+    local jump = math.floor(height / MAP)
     vim.cmd("normal! " .. jump .. "kzz")
 end)
 

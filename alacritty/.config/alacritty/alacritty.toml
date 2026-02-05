@@ -6,9 +6,9 @@ size = 11.5
 
 [window]
 blur = true
-opacity = 0.8
+opacity = 0.58
 
 padding = { x = 3, y = 5 }
 
 [colors]
-primary = { background = "#191724", foreground = "#c5c8c6" }
+primary = { background = "#000000", foreground = "#c5c8c6" }
