@@ -117,3 +117,6 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Load private variables (not tracked)
+[ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
