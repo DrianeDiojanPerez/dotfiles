@@ -43,14 +43,12 @@
 # REQUIREMENTS:
 #   - git, tmux, fzf
 #   - Must be run from inside a git repository
-#
-# =============================================================================
 
 set -eo pipefail
 
 # INFO: Verify we're inside a git repo
 git rev-parse --git-dir &>/dev/null || {
-    notify-send -u critical "Error" "Not inside a git repository." -i dialog-error
+    notify-send -u critical -t 6000 "Git Worktree" "Not inside a git repository." -i git
     exit 1
 }
 
@@ -73,7 +71,7 @@ CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
 current_fetch=$(git config --get remote.origin.fetch 2>/dev/null || echo "")
 if [[ "$current_fetch" != "+refs/heads/*:refs/remotes/origin/*" ]]; then
     git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-    echo "First-time setup: fetching all branches from origin..."
+    notify-send -t 6000 "Git Worktree" "First-time setup: fetching all branches from origin..." -i folder-download
     git fetch origin --quiet 2>/dev/null || true
 fi
 
@@ -100,6 +98,7 @@ get_branch_info() {
 
 # This is a function because we need to rebuild it after deleting a worktree.
 build_fzf_list() {
+    # Gather existing worktrees
     # We need to re-declare these each time since worktrees may have been deleted.
     declare -A _worktree_map
     local _existing_wt=()
@@ -208,8 +207,7 @@ else
             del_tag=$(echo "$raw_selected" | awk '{print $1}')
 
             if [[ "$del_tag" != "[worktree]" ]]; then
-                echo "Can only delete [worktree] entries, not branches."
-                sleep 1
+                notify-send -u low -t 6000 "Git Worktree" "Can only delete [worktree] entries, not branches." -i dialog-warning
                 continue
             fi
 
@@ -219,8 +217,7 @@ else
             del_path=$(git worktree list | grep "\[$del_branch\]" | awk '{print $1}')
 
             if [[ -z "$del_path" ]]; then
-                echo "Could not find worktree path for '$del_branch'."
-                sleep 1
+                notify-send -u critical -t 6000 "Git Worktree" "Could not find worktree path for '$del_branch'." -i edit-delete
                 continue
             fi
 
@@ -231,13 +228,12 @@ else
             # Remove the worktree from git and delete the directory
             # --force handles worktrees with uncommitted changes
             git worktree remove --force "$del_path" 2>/dev/null || {
-                echo "Failed to remove worktree. Trying manual cleanup..."
+                notify-send -u critical -t 6000 "Git Worktree" "Failed to remove worktree. Trying manual cleanup..." -i edit-delete
                 git worktree prune
                 rm -rf "$del_path"
             }
 
-            echo "Deleted worktree: $del_branch ($del_path)"
-            sleep 0.5
+            notify-send -t 6000 "Git Worktree" "Deleted worktree: $del_branch" -i user-trash-full
 
             # Loop back to show the refreshed fzf list
             continue
@@ -314,7 +310,7 @@ else
     fi
 fi
 
-# INFO: Open in a tmux session
+#  INFO: Open in a tmux session
 # Each worktree gets its own tmux SESSION named projectname_branch.
 # If the session already exists, we just switch to it.
 #
