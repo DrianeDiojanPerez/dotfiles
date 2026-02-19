@@ -1,361 +1,339 @@
 #!/usr/bin/env bash
 
-# =============================================================================
+#
 # Git Worktree Tmux Sessionizer
-# =============================================================================
 #
 # WHAT THIS SCRIPT DOES:
-#   This script helps you manage git worktrees inside a BARE repository.
-#   It uses fzf (a fuzzy finder) to show you a menu with three types of items:
+#   This script helps you manage git worktrees inside ANY git repository
+#   (bare or non-bare). It uses fzf to show you a menu with:
 #
 #     [worktree]  - Worktrees that already exist on disk. Selecting one
-#                   will jump you straight into a tmux window (tab) for it.
+#                   will jump you straight into a tmux session for it.
 #
 #     [branch]    - Branches that do NOT have a worktree yet. Selecting one
 #                   will create a new worktree for that branch, then open
-#                   a tmux window in it.
+#                   a tmux session in it.
 #
-#     [new]       - Option to create a brand new branch AND worktree from scratch.
+#   Each entry shows: author, relative date, and last commit message.
 #
-#   Worktrees are created directly inside the bare repo directory:
-#     my-project/              <-- bare repo
-#     my-project/main/         <-- worktree for 'main' branch
-#     my-project/feature-x/    <-- worktree for 'feature-x' branch
+#   If you type a name that doesn't match ANY existing branch or worktree
+#   and press Enter, it will immediately create a new branch + worktree
+#   with that name (no extra prompts).
 #
-#   Instead of creating separate tmux sessions, this script creates new
-#   WINDOWS (tabs) inside your current tmux session.
+#   Press Ctrl-D on a [worktree] entry to DELETE it (removes the worktree
+#   directory and unregisters it from git). The fzf menu refreshes after.
 #
-# WHY BARE REPOS?
-#   A bare repo has no working directory of its own — it's just the .git data.
-#   This makes it perfect for a worktree-based workflow where each branch
-#   gets its own folder. You clone with:
-#       git clone --bare <url> my-project
-#   Then each branch lives in its own directory right beside the git data.
+#   Worktrees are created ONE LEVEL UP from the repo, named as
+#   projectname_branchname:
+#     ~/code/my-project/                   <-- repo (bare or non-bare)
+#     ~/code/my-project_main/              <-- worktree for 'main' branch
+#     ~/code/my-project_feature-x/         <-- worktree for 'feature-x' branch
 #
-# SETUP FOR BARE REPOS:
-#   After cloning bare, you may need to configure the fetch refspec so that
-#   `git fetch` pulls down all remote branches:
-#       git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-#       git fetch origin
+#   Each worktree gets its own tmux SESSION.
+#
+# KEYBINDINGS (inside fzf):
+#   Enter   - Select / open the worktree or branch
+#   Ctrl-D  - Delete the selected worktree (only works on [worktree] entries)
+#   Esc     - Cancel and exit
 #
 # USAGE:
 #   ./git-worktree-sessionizer.sh           # Opens fzf menu to pick
 #   ./git-worktree-sessionizer.sh <branch>  # Skips fzf, goes straight to branch
-#   ./git-worktree-sessionizer.sh --fetch   # Fetch from remote first, then show menu
 #
 # REQUIREMENTS:
 #   - git, tmux, fzf
-#   - Must be run from inside a bare git repository
-#   - Should be run from inside a tmux session (so we can add windows to it)
+#   - Must be run from inside a git repository
 #
 # =============================================================================
 
-# Exit on errors and propagate pipe failures.
-# NOTE: We intentionally do NOT use `set -u` because empty arrays like
-# "${my_array[@]}" cause "unbound variable" errors in bash < 4.4,
-# which would make the script exit silently with no output.
 set -eo pipefail
 
-# ─── STEP 1: Verify we're inside a git repo ──────────────────────────────────
-# git rev-parse --git-dir returns the path to the .git directory.
-# For a bare repo, this is the repo folder itself (e.g. /home/user/my-project)
-# If we're not in a git repo at all, this command fails and we exit.
-REPO_ROOT=$(git rev-parse --git-dir 2>/dev/null) || {
-    echo "Error: Not inside a git repository."
+# INFO: Verify we're inside a git repo
+git rev-parse --git-dir &>/dev/null || {
+    notify-send -u critical "Error" "Not inside a git repository." -i dialog-error
     exit 1
 }
 
-# ─── STEP 2: Verify it's a BARE repo ─────────────────────────────────────────
-# A bare repo has no working tree — it's just the raw git data.
-# git rev-parse --is-bare-repository returns "true" or "false".
-# We only want this script to work with bare repos because that's the
-# proper setup for a worktree-centric workflow.
-is_bare=$(git rev-parse --is-bare-repository 2>/dev/null)
-if [[ "$is_bare" != "true" ]]; then
-    echo "Error: Not a bare repository. This script only works with bare repos."
-    echo "Hint: Clone with 'git clone --bare <url>' to use worktree workflows."
-    exit 1
-fi
-
-# ─── STEP 3: Resolve the repo root path ──────────────────────────────────────
-# Worktrees are created directly inside the bare repo directory.
-# So if your repo is at ~/code/my-project, worktrees end up as:
-#   ~/code/my-project/main/
-#   ~/code/my-project/feature-x/
-# sitting right alongside the bare git data (HEAD, refs/, objects/, etc.)
+# INFO: Resolve REPO_ROOT to the MAIN repo (not current worktree)
+# The first line of `git worktree list` is ALWAYS the main working tree
+# regardless of which worktree you're currently inside.
+REPO_ROOT=$(git worktree list | head -n1 | awk '{print $1}')
 REPO_ROOT=$(cd "$REPO_ROOT" && pwd)
 
-# ─── STEP 4: Ensure remote fetch refspec is configured ───────────────────────
-# When you `git clone --bare`, git often sets the fetch refspec to only the
-# default branch. This means `git fetch` won't pull down other remote branches,
-# so `git branch --all` shows almost nothing.
-#
-# We fix the refspec once (this is instant, just a config write).
-# The actual `git fetch` is NOT run by default because it's slow (network call).
-# Use --fetch flag to explicitly fetch before showing the menu.
+PARENT_DIR=$(dirname "$REPO_ROOT")
+PROJECT_NAME=$(basename "$REPO_ROOT")
+
+# Detect which branch the current worktree is on, so we can hide it from the
+# fzf list (no point showing the one you're already in).
+# `git symbolic-ref --short HEAD` returns the branch name (e.g. "main").
+# If we're in the bare repo root or detached HEAD, this returns empty — that's fine.
+CURRENT_BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "")
+
+# INFO: Ensure remote fetch refspec is configured
 current_fetch=$(git config --get remote.origin.fetch 2>/dev/null || echo "")
 if [[ "$current_fetch" != "+refs/heads/*:refs/remotes/origin/*" ]]; then
     git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-    # First time setup: we must fetch once or there will be no remote branches
     echo "First-time setup: fetching all branches from origin..."
     git fetch origin --quiet 2>/dev/null || true
 fi
 
-# Handle --fetch flag: user explicitly wants to refresh from remote
-if [[ "${1:-}" == "--fetch" ]]; then
-    echo "Fetching from origin..."
-    git fetch origin --quiet 2>/dev/null || true
-    shift  # Remove --fetch from $@ so $1 can still be a branch name
-fi
-
-# Fire off a background fetch so next run has fresh data.
-# The & runs it in a subshell that won't block us, and disown detaches it
-# so it keeps running even after this script exits.
+# Background fetch — updates remote refs for next run without blocking this one
 (git fetch origin --quiet 2>/dev/null &) &>/dev/null
 disown 2>/dev/null || true
 
-# ─── STEP 5: Gather existing worktrees ───────────────────────────────────────
-# `git worktree list` outputs lines like:
-#   /home/user/project                  (bare)
-#   /home/user/project/main     abc1234 [main]
-#   /home/user/project/dev      def5678 [dev]
-#
-# We parse each line to extract:
-#   - wt_path:   the filesystem path of the worktree
-#   - wt_branch: the branch name (inside the square brackets)
-#
-# We store them in an associative array (like a dictionary/map):
-#   worktree_map["main"] = "/home/user/project/main"
-#
-# This lets us quickly check later if a branch already has a worktree.
+SEP="|"
 
-declare -A worktree_map   # associative array: branch_name -> worktree_path
-existing_worktrees=()     # regular array: display strings for the fzf menu
+get_branch_info() {
+    local branch="$1"
+    local format_str="%an${SEP}%ar${SEP}%s"
+    local info
+
+    info=$(git log -1 --format="$format_str" "$branch" 2>/dev/null) ||
+    info=$(git log -1 --format="$format_str" "origin/$branch" 2>/dev/null) ||
+    info="unknown${SEP}unknown${SEP}no commits"
+
+    echo "$info" | awk -F"${SEP}" '{
+        msg = substr($3, 1, 50)
+        printf "%s'"${SEP}"'%s'"${SEP}"'%s", $1, $2, msg
+    }'
+}
+
+# This is a function because we need to rebuild it after deleting a worktree.
+build_fzf_list() {
+    # We need to re-declare these each time since worktrees may have been deleted.
+    declare -A _worktree_map
+    local _existing_wt=()
+
+    while IFS= read -r line; do
+        local wt_path wt_branch
+        wt_path=$(echo "$line" | awk '{print $1}')
+        wt_branch=$(echo "$line" | sed -n 's/.*\[\(.*\)\].*/\1/p')
+
+        if [[ -n "$wt_branch" ]]; then
+            [[ "$wt_path" == "$REPO_ROOT" ]] && continue
+            _worktree_map["$wt_branch"]="$wt_path"
+            _existing_wt+=("$wt_branch")
+        fi
+    done < <(git worktree list)
+
+    # Gather and deduplicate branches
+    local _all_branches=()
+    declare -A _seen
+
+    while IFS= read -r branch; do
+        branch=$(echo "$branch" | sed 's/^[* ] //' | xargs)
+        [[ -z "$branch" ]] && continue
+        [[ "$branch" == *"HEAD"* ]] && continue
+
+        local short="${branch#origin/}"
+        if [[ -z "${_seen[$short]+_}" ]]; then
+            _seen["$short"]=1
+            _all_branches+=("$short")
+        fi
+    done < <(git branch --all --format='%(refname:short)' 2>/dev/null)
+
+    local list=""
+
+    # Worktrees first
+    if [[ ${#_existing_wt[@]} -gt 0 ]]; then
+        for branch in "${_existing_wt[@]}"; do
+            # Skip the worktree you're currently inside
+            [[ "$branch" == "$CURRENT_BRANCH" ]] && continue
+
+            local info author date msg
+            info=$(get_branch_info "$branch")
+            author=$(echo "$info" | awk -F"$SEP" '{print $1}')
+            date=$(echo "$info" | awk -F"$SEP" '{print $2}')
+            msg=$(echo "$info" | awk -F"$SEP" '{print $3}')
+            list+=$(printf "[worktree] %-25s %s %-15s %s %-15s %s %s" "$branch" "$SEP" "$author" "$SEP" "$date" "$SEP" "$msg")
+            list+=$'\n'
+        done
+    fi
+
+    # Branches without worktrees
+    if [[ ${#_all_branches[@]} -gt 0 ]]; then
+        for branch in "${_all_branches[@]}"; do
+            [[ -n "${_worktree_map[$branch]+_}" ]] && continue
+            # Skip the branch you're currently on
+            [[ "$branch" == "$CURRENT_BRANCH" ]] && continue
+
+            local info author date msg
+            info=$(get_branch_info "$branch")
+            author=$(echo "$info" | awk -F"$SEP" '{print $1}')
+            date=$(echo "$info" | awk -F"$SEP" '{print $2}')
+            msg=$(echo "$info" | awk -F"$SEP" '{print $3}')
+            list+=$(printf "[branch]   %-25s %s %-15s %s %-15s %s %s" "$branch" "$SEP" "$author" "$SEP" "$date" "$SEP" "$msg")
+            list+=$'\n'
+        done
+    fi
+
+    echo "$list"
+}
+
+# INFO: fzf loop (supports delete + re-display)
+# We loop so that after deleting a worktree with Ctrl-D, the menu refreshes
+# and you can keep working. The loop exits on Enter (select) or Esc (cancel).
+#
+# --print-query + --expect=ctrl-d makes fzf output THREE lines:
+#   Line 1: the typed query (what you searched for)
+#   Line 2: the key pressed ("ctrl-d" or empty for Enter)
+#   Line 3: the selected line
+
+if [[ $# -eq 1 ]]; then
+    # Branch name passed as argument — skip fzf entirely
+    raw_selected=""
+    query="$1"
+    key=""
+else
+    while true; do
+        fzf_list=$(build_fzf_list)
+
+        fzf_output=$(echo "$fzf_list" | fzf --ansi \
+            --print-query \
+            --expect=ctrl-d \
+            --prompt="  Worktree > " \
+            --header="Enter: select | Ctrl-D: delete worktree | Esc: cancel" \
+            2>/dev/null) || true
+
+        query=$(echo "$fzf_output" | sed -n '1p')
+        key=$(echo "$fzf_output" | sed -n '2p')
+        raw_selected=$(echo "$fzf_output" | sed -n '3p')
+
+        # Esc / Ctrl-C — nothing captured, exit
+        [[ -z "$query" && -z "$key" && -z "$raw_selected" ]] && exit 0
+
+        if [[ "$key" == "ctrl-d" && -n "$raw_selected" ]]; then
+            # INFO: DELETE WORKTREE
+            # Only works on [worktree] entries — branches can't be deleted this way.
+            del_tag=$(echo "$raw_selected" | awk '{print $1}')
+
+            if [[ "$del_tag" != "[worktree]" ]]; then
+                echo "Can only delete [worktree] entries, not branches."
+                sleep 1
+                continue
+            fi
+
+            del_branch=$(echo "$raw_selected" | sed 's/\[[a-z]*\] *//' | awk -F'\\|' '{print $1}' | xargs)
+
+            # Get the path from git worktree list (more reliable than reconstructing)
+            del_path=$(git worktree list | grep "\[$del_branch\]" | awk '{print $1}')
+
+            if [[ -z "$del_path" ]]; then
+                echo "Could not find worktree path for '$del_branch'."
+                sleep 1
+                continue
+            fi
+
+            # Kill any tmux session associated with this worktree
+            del_session=$(echo "${PROJECT_NAME}_${del_branch}" | tr './' '__')
+            tmux kill-session -t "$del_session" 2>/dev/null || true
+
+            # Remove the worktree from git and delete the directory
+            # --force handles worktrees with uncommitted changes
+            git worktree remove --force "$del_path" 2>/dev/null || {
+                echo "Failed to remove worktree. Trying manual cleanup..."
+                git worktree prune
+                rm -rf "$del_path"
+            }
+
+            echo "Deleted worktree: $del_branch ($del_path)"
+            sleep 0.5
+
+            # Loop back to show the refreshed fzf list
+            continue
+        fi
+
+        # Enter was pressed — break out of the loop to handle selection
+        break
+    done
+fi
+
+# INFO: Rebuild worktree map for selection handling
+# After potential deletions in the loop above, we need a fresh worktree map.
+declare -A worktree_map
+declare -A seen_branches
 
 while IFS= read -r line; do
-    # Extract the path (first column)
     wt_path=$(echo "$line" | awk '{print $1}')
-
-    # Extract the branch name from [brackets] using sed (portable, no PCRE needed).
-    # sed finds text between [ and ], e.g. "[main]" -> "main"
     wt_branch=$(echo "$line" | sed -n 's/.*\[\(.*\)\].*/\1/p')
 
     if [[ -n "$wt_branch" ]]; then
-        # Skip the bare repo's own entry — it shows up in the list but isn't
-        # a real worktree we can cd into (it has no working files)
         [[ "$wt_path" == "$REPO_ROOT" ]] && continue
-
-        # Save to our lookup map and display list
         worktree_map["$wt_branch"]="$wt_path"
-        existing_worktrees+=("[worktree] $wt_branch  →  $wt_path")
     fi
 done < <(git worktree list)
-# Note: < <(...) is "process substitution" — it runs `git worktree list`
-# and feeds its output into the while loop as if it were a file.
-
-# ─── STEP 6: Gather all branches (local + remote) ────────────────────────────
-# We want to show the user ALL available branches, not just the ones that
-# already have worktrees. This way they can pick any branch to check out.
-#
-# `git branch --all --format='%(refname:short)'` gives us:
-#   main
-#   dev
-#   origin/main
-#   origin/dev
-#   origin/feature-y
-
-all_branches=()
 
 while IFS= read -r branch; do
-    # Clean up: remove leading whitespace and the "* " marker for current branch
     branch=$(echo "$branch" | sed 's/^[* ] //' | xargs)
-
-    # Skip empty lines, detached HEAD entries, and HEAD pointers
     [[ -z "$branch" ]] && continue
-    [[ "$branch" == *"HEAD detached"* ]] && continue
     [[ "$branch" == *"HEAD"* ]] && continue
-
-    all_branches+=("$branch")
+    short="${branch#origin/}"
+    seen_branches["$short"]=1
 done < <(git branch --all --format='%(refname:short)' 2>/dev/null)
 
-# ─── STEP 7: Deduplicate branches ────────────────────────────────────────────
-# If "main" exists as both a local branch AND "origin/main", we only want
-# to show it once. We strip the "origin/" prefix and track what we've seen.
-#
-# Example:
-#   Input:  main, dev, origin/main, origin/dev, origin/feature-y
-#   Output: main, dev, feature-y
-#   (origin/main and origin/dev are skipped because main and dev already exist)
+# INFO: Handle the selection
+if [[ -n "$raw_selected" ]]; then
+    tag=$(echo "$raw_selected" | awk '{print $1}')
+    selected_branch=$(echo "$raw_selected" | sed 's/\[[a-z]*\] *//' | awk -F'\\|' '{print $1}' | xargs)
 
-unique_branches=()
-declare -A seen_branches  # associative array used as a "set" to track seen names
+    if [[ "$tag" == "[worktree]" ]]; then
+        selected_path="${worktree_map[$selected_branch]}"
 
-for b in "${all_branches[@]}"; do
-    # Strip "origin/" prefix if present to get the short name
-    short="${b#origin/}"
+    elif [[ "$tag" == "[branch]" ]]; then
+        wt_path="$PARENT_DIR/${PROJECT_NAME}_${selected_branch}"
 
-    # Only add if we haven't seen this short name before
-    # ${seen_branches[$short]+_} expands to "_" if the key exists, empty otherwise
-    if [[ -z "${seen_branches[$short]+_}" ]]; then
-        seen_branches["$short"]=1
-        unique_branches+=("$short")
-    fi
-done
-
-# ─── STEP 8: Build the fzf menu ──────────────────────────────────────────────
-# We build a newline-separated string with three sections:
-#   1. Existing worktrees (labeled [worktree]) — shown first for quick access
-#   2. Branches without worktrees (labeled [branch]) — available to create
-#   3. A special [new] option to create a brand new branch
-#
-# Example fzf menu:
-#   [worktree] main       →  /home/user/project/main
-#   [worktree] dev        →  /home/user/project/dev
-#   [branch]   feature-y
-#   [branch]   hotfix-z
-#   [new]      Create new branch...
-
-fzf_list=""
-
-# Add existing worktrees (safely handles empty array)
-if [[ ${#existing_worktrees[@]} -gt 0 ]]; then
-    for entry in "${existing_worktrees[@]}"; do
-        fzf_list+="$entry"$'\n'
-    done
-fi
-
-# Add branches that don't have a worktree yet (safely handles empty array)
-if [[ ${#unique_branches[@]} -gt 0 ]]; then
-    for branch in "${unique_branches[@]}"; do
-        # Only show if this branch does NOT already have a worktree
-        if [[ -z "${worktree_map[$branch]+_}" ]]; then
-            fzf_list+="[branch]   $branch"$'\n'
+        if git show-ref --verify --quiet "refs/remotes/origin/$selected_branch" 2>/dev/null &&
+           ! git show-ref --verify --quiet "refs/heads/$selected_branch" 2>/dev/null; then
+            git worktree add --track -b "$selected_branch" "$wt_path" "origin/$selected_branch"
+        else
+            git worktree add "$wt_path" "$selected_branch"
         fi
-    done
-fi
 
-# Add the "create new branch" option at the bottom
-fzf_list+="[new]      Create new branch..."
-
-# ─── STEP 9: Let the user pick with fzf ──────────────────────────────────────
-# If a branch name was passed as argument $1, skip the fzf menu entirely.
-# Otherwise, pipe our list into fzf for interactive selection.
-# If the user presses Escape/Ctrl-C in fzf, it exits non-zero and we bail out.
-
-if [[ $# -eq 1 ]]; then
-    raw_selected="$1"
-else
-    raw_selected=$(echo "$fzf_list" | fzf --ansi --prompt="  Worktree > " --header="Select a worktree or branch") || exit 0
-fi
-
-# If somehow nothing was selected, exit gracefully
-[[ -z "$raw_selected" ]] && exit 0
-
-# ─── STEP 10: Handle the selection ───────────────────────────────────────────
-# Based on the prefix tag ([worktree], [branch], or [new]), we do different things:
-
-if [[ "$raw_selected" == "[new]"* ]]; then
-    # ── CREATE A BRAND NEW BRANCH ──
-    # Ask the user for a branch name and a base branch to branch off from.
-    # Then create both the branch and the worktree in one go.
-    # `git worktree add -b <new-branch> <path> <base-branch>` does both.
-
-    read -rp "New branch name: " new_branch
-    [[ -z "$new_branch" ]] && exit 0
-
-    read -rp "Base branch (default: HEAD): " base_branch
-    base_branch="${base_branch:-HEAD}"  # Default to HEAD if they press Enter
-
-    wt_path="$REPO_ROOT/$new_branch"
-    git worktree add -b "$new_branch" "$wt_path" "$base_branch"
-    selected_path="$wt_path"
-    selected_branch="$new_branch"
-
-elif [[ "$raw_selected" == "[worktree]"* ]]; then
-    # ── EXISTING WORKTREE ──
-    # The worktree already exists on disk. Just extract the branch name
-    # and look up its path from our map. No git commands needed.
-
-    # Parse: "[worktree] main  →  /path/to/worktree" -> extract "main"
-    selected_branch=$(echo "$raw_selected" | sed 's/\[worktree\] //' | awk -F'  →  ' '{print $1}' | xargs)
-    selected_path="${worktree_map[$selected_branch]}"
-
-elif [[ "$raw_selected" == "[branch]"* ]]; then
-    # ── BRANCH WITHOUT A WORKTREE ──
-    # The branch exists in git but doesn't have a worktree directory yet.
-    # We need to create a worktree for it.
-
-    # Parse: "[branch]   feature-y" -> extract "feature-y"
-    selected_branch=$(echo "$raw_selected" | sed 's/\[branch\]   //' | xargs)
-    wt_path="$REPO_ROOT/$selected_branch"
-
-    # Check if this is a remote-only branch (exists on origin but not locally).
-    # If so, we use --track to set up the local branch to track the remote one.
-    # This means `git pull` and `git push` will work correctly out of the box.
-    if git show-ref --verify --quiet "refs/remotes/origin/$selected_branch" 2>/dev/null &&
-       ! git show-ref --verify --quiet "refs/heads/$selected_branch" 2>/dev/null; then
-        # Remote branch exists but no local branch — create with tracking
-        git worktree add --track -b "$selected_branch" "$wt_path" "origin/$selected_branch"
-    else
-        # Local branch already exists — just create the worktree
-        git worktree add "$wt_path" "$selected_branch"
+        selected_path="$wt_path"
     fi
-
-    selected_path="$wt_path"
-
 else
-    # ── FALLBACK: Direct branch name (from $1 argument) ──
-    # If the user passed a branch name directly as an argument (not from fzf),
-    # it won't have a [tag] prefix. Handle it here.
-
-    selected_branch="$raw_selected"
+    selected_branch="$query"
 
     if [[ -n "${worktree_map[$selected_branch]+_}" ]]; then
-        # Worktree already exists for this branch — just use it
         selected_path="${worktree_map[$selected_branch]}"
+    elif [[ -n "${seen_branches[$selected_branch]+_}" ]]; then
+        wt_path="$PARENT_DIR/${PROJECT_NAME}_${selected_branch}"
+
+        if git show-ref --verify --quiet "refs/remotes/origin/$selected_branch" 2>/dev/null &&
+           ! git show-ref --verify --quiet "refs/heads/$selected_branch" 2>/dev/null; then
+            git worktree add --track -b "$selected_branch" "$wt_path" "origin/$selected_branch"
+        else
+            git worktree add "$wt_path" "$selected_branch"
+        fi
+
+        selected_path="$wt_path"
     else
-        # No worktree yet — try to create one.
-        # First try checking out the existing branch; if that fails,
-        # create a new branch from HEAD.
-        wt_path="$REPO_ROOT/$selected_branch"
-        git worktree add "$wt_path" "$selected_branch" 2>/dev/null ||
-            git worktree add -b "$selected_branch" "$wt_path" HEAD
+        wt_path="$PARENT_DIR/${PROJECT_NAME}_${selected_branch}"
+        git worktree add -b "$selected_branch" "$wt_path" HEAD
         selected_path="$wt_path"
     fi
 fi
 
-# ─── STEP 11: Open as a tmux window (tab) in the current session ─────────────
-# Instead of creating a new tmux SESSION for each worktree, we create a new
-# WINDOW (tab) inside the current session. This keeps everything in one place
-# and you can switch between branches with Ctrl-b + n/p or Ctrl-b + <number>.
+# INFO: Open in a tmux session
+# Each worktree gets its own tmux SESSION named projectname_branch.
+# If the session already exists, we just switch to it.
 #
-# Branch names can contain dots and slashes (e.g. "feature/auth" or "v2.0"),
-# but tmux window names handle those poorly, so we replace them
-# with underscores: "feature/auth" -> "feature_auth"
+# Switch between sessions with Ctrl-b s (list) or Ctrl-b ) / Ctrl-b (.
 
-window_name=$(echo "$selected_branch" | tr './' '__')
+session_name=$(echo "${PROJECT_NAME}_${selected_branch}" | tr './' '__')
+tmux_running=$(pgrep tmux || true)
 
-if [[ -z "${TMUX:-}" ]]; then
-    # ── NOT INSIDE TMUX ──
-    # We can't add a window to a session if we're not in one.
-    # Start a new tmux session with the worktree as the first window.
-    # The session name is based on the repo name for easy identification.
-    session_name=$(basename "$REPO_ROOT" | tr './' '__')
-    tmux new-session -s "$session_name" -n "$window_name" -c "$selected_path"
+if [[ -z "${TMUX:-}" ]] && [[ -z "$tmux_running" ]]; then
+    tmux new-session -s "$session_name" -c "$selected_path"
     exit 0
 fi
 
-# ── INSIDE TMUX ──
-# Check if a window with this name already exists in the current session.
-# `tmux list-windows -F '#{window_name}'` gives us all window names.
-# We grep for an exact match to see if our branch already has a tab open.
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+    tmux new-session -ds "$session_name" -c "$selected_path"
+fi
 
-if tmux list-windows -F '#{window_name}' | grep -qx "$window_name"; then
-    # Window already exists — just switch to it.
-    tmux select-window -t "$window_name"
+if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "$session_name"
 else
-    # Window doesn't exist — create a new one.
-    # -n sets the window name (shown in the tab bar at the bottom).
-    # -c sets the starting directory to our worktree path.
-    tmux new-window -n "$window_name" -c "$selected_path"
+    tmux attach-session -t "$session_name"
 fi
