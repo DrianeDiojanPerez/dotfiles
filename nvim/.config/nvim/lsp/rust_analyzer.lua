@@ -150,15 +150,22 @@ return {
 					hideNamedConstructor = false,
 				},
 			},
-			-- Other useful rust-analyzer settings
-			["cargo"] = {
-				["allFeatures"] = true,
+			-- -- Other useful rust-analyzer settings
+			-- ["cargo"] = {
+			-- 	["allFeatures"] = true,
+			-- },
+			-- checkOnSave = {
+			-- 	["allFeatures"] = true,
+			-- 	["extraArgs"] = { "--all-features" },
+			-- 	command = "check",
+			-- },
+			cargo = {
+				features = "all",
 			},
-			checkOnSave = {
-				["allFeatures"] = true,
-				["extraArgs"] = { "--all-features" },
+			check = {
 				command = "check",
 			},
+			checkOnSave = true,
 			diagnostics = {
 				enable = true,
 			},

@@ -91,6 +91,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 alias ls='ls --color'
 alias vim='nvim'
 alias c='clear'
+alias docker-compose-no-cache='docker builder prune -af && docker compose up'
 # alias ls="exa"
 alias ls="eza --long --color=always --icons=always"
 alias cat="bat"
@@ -120,3 +121,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Load private variables (not tracked)
 [ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
+
+# opencode
+export PATH=/home/ddperez/.opencode/bin:$PATH
+
+export EDITOR=nvim

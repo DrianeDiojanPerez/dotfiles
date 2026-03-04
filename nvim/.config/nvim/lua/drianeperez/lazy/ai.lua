@@ -7,9 +7,9 @@ return {
 		local basename = vim.fs.basename(cwd)
 
 		_99.setup({
-			provider = _99.ClaudeCodeProvider,
+			provider = _99.Providers.ClaudeCodeProvider,
 			-- model is optional, overrides the provider's default
-			model = "claude-sonnet-4-5",
+			model = "claude-opus-4-6",
 			logger = {
 				level = _99.DEBUG,
 				path = "/tmp/" .. basename .. ".99.debug",
@@ -22,12 +22,16 @@ return {
 			--- /foo/AGENT.md
 			--- assuming that /foo is project root (based on cwd)
 			md_files = {
-				"AGENT.md",
+				-- "AGENT.md",
 			},
 		})
 
 		vim.keymap.set("v", "<leader>9v", function()
 			_99.visual()
+		end)
+
+        	vim.keymap.set("v", "<leader>99", function()
+			_99.view_logs()
 		end)
 
 		vim.keymap.set("n", "<leader>9x", function()
