@@ -93,7 +93,7 @@ alias vim='nvim'
 alias c='clear'
 alias docker-compose-no-cache='docker builder prune -af && docker compose up'
 # alias ls="exa"
-alias ls="eza --long --color=always --icons=always"
+alias ls="eza --long --color=always --icons=always --group-directories-first --all"
 alias cat="bat"
 
 # Shell integrations
