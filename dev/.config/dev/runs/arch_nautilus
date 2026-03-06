@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if pacman -Q nautilus &>/dev/null; then
+  echo "Nautilus is already installed: $(pacman -Q nautilus)"
+else
+  echo "Nautilus not found. Installing..."
+  sudo pacman -S --noconfirm nautilus
+  echo "Nautilus installed successfully."
+fi
