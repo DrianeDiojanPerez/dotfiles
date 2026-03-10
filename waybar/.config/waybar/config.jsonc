@@ -8,6 +8,7 @@
     "modules-right": [
         "pulseaudio",
         "battery",
+        "custom/layout",
         "network",
         "bluetooth",
         "cpu",
@@ -108,6 +109,11 @@
         "on-click": "swaync-client -t -sw",
         "on-click-right": "swaync-client -d -sw",
         "escape": true
+    },
+    "custom/layout": {
+        "exec": "~/.config/waybar/scripts/get-layout.sh",
+        "interval": 1,
+        "format": "󰕮 {}"
     },
 }
 

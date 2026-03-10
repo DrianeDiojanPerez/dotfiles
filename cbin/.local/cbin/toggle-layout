@@ -1,0 +1,26 @@
+#!/bin/bash
+# toggle-layout.sh
+# Toggles between monocle and master layout for the current workspace only
+# Usage: ./toggle-layout.sh
+# Place at: ~/.config/hypr/scripts/toggle-layout.sh
+
+TEMP_FILE="/tmp/hypr_layouts"
+
+# Get current focused workspace ID
+WS=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .activeWorkspace.id')
+
+# Read current layout for this workspace from temp file
+CURRENT=$(grep "^$WS=" "$TEMP_FILE" 2>/dev/null | tail -1 | cut -d= -f2)
+
+if [ "$CURRENT" = "monocle" ]; then
+    # Switch back to master
+    hyprctl keyword "workspace = $WS, layoutopt:layout:master"
+    sed -i "/^$WS=/d" "$TEMP_FILE"
+    notify-send "Layout" "Workspace $WS → Master" --expire-time=1500
+else
+    # Switch to monocle
+    hyprctl keyword "workspace = $WS, layoutopt:layout:monocle"
+    sed -i "/^$WS=/d" "$TEMP_FILE" 2>/dev/null
+    echo "$WS=monocle" >> "$TEMP_FILE"
+    notify-send "Layout" "Workspace $WS → Monocle" --expire-time=1500
+fi
