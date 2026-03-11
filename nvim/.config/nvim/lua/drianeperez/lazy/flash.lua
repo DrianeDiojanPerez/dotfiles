@@ -9,7 +9,6 @@ return {
 
 		local flash = require("flash")
 		flash.setup({
-			-- labels = "abcdefghijklmnopqrstuvwxyz",
 			labels = "asdfghjklqwertyuiopzxcvbnm",
 			search = {
 				-- search/jump in all windows
@@ -193,20 +192,27 @@ return {
 		end)
 		-- vim.api.nvim_set_keymap('n', '<Enter>', '', { noremap = true, silent = true })
 	end,
-	 event = "VeryLazy",
-	 opts = {},
-	 keys = {
-	     { "<C-m>", mode = { "n", "x" }, function() require("flash").jump({}) end, desc = "Flash" },
-	     -- { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-	     -- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-	     -- { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-	     -- { "<C-m>", mode = { "n" }, function() require("flash").toggle(true) end, desc = "Toggle Flash Search" },
-	 },
-	 config = function()
-	     require("flash").setup({
-	         label = {
-	             enabled = false,
-	         }
-	     })
-	 end
+	event = "VeryLazy",
+	opts = {},
+	keys = {
+		{
+			"<C-m>",
+			mode = { "n", "x" },
+			function()
+				require("flash").jump({})
+			end,
+			desc = "Flash",
+		},
+		-- { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+		-- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+		-- { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+		-- { "<C-m>", mode = { "n" }, function() require("flash").toggle(true) end, desc = "Toggle Flash Search" },
+	},
+	-- config = function()
+	-- 	require("flash").setup({
+	-- 		label = {
+	-- 			enabled = false,
+	-- 		},
+	-- 	})
+	-- end,
 }
