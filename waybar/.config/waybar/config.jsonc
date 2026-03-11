@@ -8,7 +8,6 @@
     "modules-right": [
         "pulseaudio",
         "battery",
-        "custom/layout",
         "network",
         "bluetooth",
         "cpu",
@@ -37,7 +36,7 @@
         "format-wifi": "󰤢 ",
         "format-ethernet": "󰈀 ",
         "format-disconnected": "󰤠 ",
-        "interval": 5,
+        "interval": 1,
         "tooltip-format": "{signalStrength}% {essid} {ifname} via {gwaddr}/{cidr} ",
         "on-click": "iwctl station wlan0 scan >/dev/null 2>&1 & alacritty --class=Impala -e impala"
     },
