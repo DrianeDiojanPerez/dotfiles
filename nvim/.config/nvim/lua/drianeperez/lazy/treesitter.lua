@@ -27,6 +27,21 @@ return {
                 "phpdoc",
                 "html",
                 "jsdoc",
+
+                -- missing
+                "tsx",         -- jsx/tsx files (if you do React)
+                "cpp",         -- C++ (c only covers C)
+                "c_sharp",     -- C# XML /// docs
+                "java",        -- Javadoc /**
+                "kotlin",      -- Kotlin docs
+                "rust",        -- rustdoc /// built-in
+                "python",      -- docstrings (partial but still useful)
+                "ruby",        -- YARD partial
+                "go",          -- godoc (no tags but syntax still useful)
+                "css",         -- likely want this alongside html
+                "json",
+                "markdown",
+                "markdown_inline", -- inline code/bold inside markdown
             },
 
             -- Install parsers synchronously (only applied to `ensure_installed`)

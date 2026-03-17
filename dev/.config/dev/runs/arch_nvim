@@ -5,6 +5,8 @@
 
 echo "Checking for Neovim and Ripgrep..."
 
+yay -S tree-sitter-cli
+
 # Check and install Neovim
 if pacman -Q neovim >/dev/null 2>&1; then
     echo "✓ Neovim already installed"
