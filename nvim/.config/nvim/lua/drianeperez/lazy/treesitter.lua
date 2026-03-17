@@ -24,6 +24,7 @@ return {
                 "query",
                 "php",
                 "php_only",
+                "phpdoc",
                 "html",
                 "jsdoc",
             },

@@ -126,3 +126,4 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH=/home/ddperez/.opencode/bin:$PATH
 
 export EDITOR=nvim
+export SHARP_IGNORE_GLOBAL_LIBVIPS=1
