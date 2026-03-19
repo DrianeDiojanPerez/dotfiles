@@ -4,7 +4,7 @@ return {
     dependencies = {
         "nvim-treesitter/nvim-treesitter-textobjects",
         "nvim-treesitter/nvim-treesitter-refactor",
-        -- "nvim-treesitter/nvim-tree-docs",
+        "nvim-treesitter/nvim-tree-docs",
         "nvim-treesitter/playground",
     },
     build = ":TSUpdate",

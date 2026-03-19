@@ -14,7 +14,9 @@
         "memory",
         "tray",
         "custom/lock",
-        "custom/notification"
+        "custom/suspend",
+        "custom/shutdown",
+        "custom/notification",
     ],
     "hyprland/workspaces": {
         "format": "{name}: {icon}",
@@ -31,6 +33,7 @@
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format": "{:%d - %I:%M:%S %p}",
         "interval": 1,
+        "on-click": "gnome-calendar"
     },
     "network": {
         "format-wifi": "󰤢 ",
@@ -114,5 +117,23 @@
         "interval": 1,
         "format": "󰕮 {}"
     },
+    "custom/suspend": {
+        "format": "⏾",
+        "on-click": "systemctl suspend",
+        "tooltip": true,
+        "tooltip-format": "Suspend"
+    },
+    "custom/shutdown": {
+        "format": "󰐥",
+        "on-click": "systemctl poweroff",
+        "tooltip": true,
+        "tooltip-format": "Shutdown"
+    },
+    "custom/reboot": {
+        "format": "󰜉",
+        "on-click": "systemctl reboot",
+        "tooltip": true,
+        "tooltip-format": "Reboot"
+    }
 }
 
