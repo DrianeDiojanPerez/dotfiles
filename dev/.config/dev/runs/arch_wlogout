@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Checking wlogout and hyprshutdown..."
+
+if ! command -v wlogout &>/dev/null; then
+    echo "Installing wlogout..."
+    yay -S --noconfirm wlogout
+else
+    echo "wlogout already installed"
+fi
+
+if ! command -v hyprshutdown &>/dev/null; then
+    echo "Installing hyprshutdown..."
+    yay -S --noconfirm hyprshutdown
+else
+    echo "hyprshutdown already installed"
+fi
+
+echo "Done!"

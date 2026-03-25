@@ -1,0 +1,26 @@
+window {
+    background-color: transparent;
+}
+
+button {
+    background-color: rgba(255, 255, 255, 0.08);
+    background-image: none;
+    border: none;
+    border-radius: 12px;
+    margin: 8px;
+    min-width: 80px;
+    min-height: 80px;
+
+    /* Remove text */
+    font-size: 0;
+    color: transparent;
+
+    /* No animations */
+    transition: none;
+    animation: none;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: none;
+}

@@ -1,0 +1,128 @@
+[[keywords]]
+words = ['ERROR', 'error']
+style = { fg = "red", bold = true }
+
+[[keywords]]
+words = ['WARN', 'warn', 'WARNING', 'warning']
+style = { fg = "yellow", bold = true }
+
+[[keywords]]
+words = ['INFO', 'info']
+style = { fg = "green", bold = true }
+
+[[keywords]]
+words = ['DEBUG', 'debug']
+style = { fg = "blue", bold = true }
+
+[[keywords]]
+words = ['TRACE', 'trace']
+style = { fg = "magenta" }
+
+[[keywords]]
+words = ['SUCCESS', 'success', 'OK', 'ok']
+style = { fg = "green", bold = true }
+
+[[keywords]]
+words = ['FATAL', 'fatal', 'CRITICAL', 'critical']
+style = { fg = "red", bold = true, italic = true }
+
+[[keywords]]
+words = ['null', 'NULL', 'nil', 'undefined']
+style = { fg = "red", italic = true }
+
+[[keywords]]
+words = ['true', 'TRUE']
+style = { fg = "cyan", bold = true }
+
+[[keywords]]
+words = ['false', 'FALSE']
+style = { fg = "magenta", bold = true }
+
+[[keywords]]
+words = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'INNER JOIN', 'LEFT JOIN']
+style = { fg = "cyan", bold = true }
+
+[[regexes]]
+regex = "'[^']+'"
+style = { fg = "yellow", bold = true }
+
+[[keywords]]
+words = ['AND', 'OR', 'ON', 'AS', 'ORDER BY', 'GROUP BY', 'LIMIT']
+style = { fg = "cyan" }
+
+[[keywords]]
+words = ['INSERT', 'UPDATE', 'DELETE', 'SET', 'VALUES', 'INTO']
+style = { fg = "yellow", bold = true }
+
+[[keywords]]
+words = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+style = { fg = "green", bold = true }
+
+[[keywords]]
+words = ['exception', 'Exception', 'EXCEPTION', 'stacktrace', 'StackTrace']
+style = { fg = "red", italic = true }
+
+[[keywords]]
+words = ['timeout', 'Timeout', 'TIMEOUT']
+style = { fg = "yellow", italic = true }
+
+[[keywords]]
+words = ['connected', 'Connected', 'CONNECTED']
+style = { fg = "green" }
+
+[[keywords]]
+words = ['disconnected', 'Disconnected', 'failed', 'Failed', 'FAILED']
+style = { fg = "red" }
+
+# ── Regex: timestamps ───────────────────────────────────────────────────────
+[[regexes]]
+regex = '\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}'
+style = { fg = "blue", italic = true }
+
+# ── Regex: IP addresses ─────────────────────────────────────────────────────
+[[regexes]]
+regex = '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+style = { fg = "yellow" }
+
+# ── Regex: JSON keys ────────────────────────────────────────────────────────
+[[regexes]]
+regex = '"[^"]+"\s*:'
+style = { fg = "cyan" }
+
+# ── Regex: quoted strings ───────────────────────────────────────────────────
+[[regexes]]
+regex = '"[^"]*"'
+style = { fg = "green" }
+
+# ── Regex: numbers ──────────────────────────────────────────────────────────
+[[regexes]]
+regex = '\b\d+\.?\d*\b'
+style = { fg = "magenta" }
+
+# ── Regex: UUIDs ────────────────────────────────────────────────────────────
+[[regexes]]
+regex = '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'
+style = { fg = "blue", italic = true }
+
+# ── Regex: URLs ─────────────────────────────────────────────────────────────
+[[regexes]]
+regex = 'https?://[^\s]+'
+style = { fg = "cyan", italic = true }
+
+# ── Regex: file paths ───────────────────────────────────────────────────────
+[[regexes]]
+regex = '(/[a-zA-Z0-9._/-]+)'
+style = { fg = "yellow", italic = true }
+
+# ── Regex: HTTP status codes ────────────────────────────────────────────────
+[[regexes]]
+regex = '\b[45]\d{2}\b'
+style = { fg = "red", bold = true }
+
+[[regexes]]
+regex = '\b2\d{2}\b'
+style = { fg = "green", bold = true }
+
+[[regexes]]
+regex = '={2,}[^=]+={2,}'
+style = { fg = "black", bg = "magenta", bold = true, italic = true}
