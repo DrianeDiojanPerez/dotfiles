@@ -125,4 +125,4 @@ style = { fg = "green", bold = true }
 
 [[regexes]]
 regex = '={2,}[^=]+={2,}'
-style = { fg = "black", bg = "magenta", bold = true, italic = true}
+style = { fg = "black", bg = "magenta", bold = true, italic = true, underline = false}

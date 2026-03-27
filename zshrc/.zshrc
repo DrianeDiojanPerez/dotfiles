@@ -62,6 +62,8 @@ alias vpn='sudo vpnc --enable-weak-encryption'
 alias phpvm='sudo update-alternatives --config php'
 alias vpnd='sudo vpnc-disconnect'
 
+alias logit='tail -f * | sed --unbuffered '\''G;G'\'' | tspin'
+
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:$(go env GOPATH)/bin"
 export PATH="$HOME/.local/cbin:$PATH"
