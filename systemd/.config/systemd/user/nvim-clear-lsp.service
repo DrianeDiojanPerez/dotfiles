@@ -1,0 +1,6 @@
+[Unit]
+Description=Clear Neovim LSP log
+
+[Service]
+Type=oneshot
+ExecStart=rm -f /home/ddperez/.local/state/nvim/lsp.log

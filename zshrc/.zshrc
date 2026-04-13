@@ -12,6 +12,13 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+alias nvim-reset='
+rm -rf ~/.local/share/nvim \
+       ~/.cache/nvim \
+       ~/.config/nvim \
+&& echo "Neovim fully reset"
+'
+
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
@@ -63,6 +70,18 @@ alias phpvm='sudo update-alternatives --config php'
 alias vpnd='sudo vpnc-disconnect'
 
 alias logit='tail -f * | sed --unbuffered '\''G;G'\'' | tspin'
+
+# And REPLACE it with:
+unalias logit 2>/dev/null
+logit() {
+  local dir="${1:-.}"
+  (
+    tail -f "$dir"/* 2>/dev/null &
+    inotifywait -m -q -e create --format '%f' "$dir" | while read -r newfile; do
+      tail -f "$dir/$newfile" &
+    done
+  ) | sed --unbuffered 'G;G' | tspin
+}
 
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:$(go env GOPATH)/bin"

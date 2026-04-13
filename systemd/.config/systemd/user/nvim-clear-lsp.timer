@@ -1,0 +1,9 @@
+[Unit]
+Description=Clear Neovim LSP log weekdays at 8:30
+
+[Timer]
+OnCalendar=Mon-Fri 08:30
+Persistent=true
+
+[Install]
+WantedBy=timers.target

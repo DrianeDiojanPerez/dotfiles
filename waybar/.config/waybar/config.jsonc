@@ -119,13 +119,13 @@
     },
     "custom/suspend": {
         "format": "⏾",
-        "on-click": "systemctl suspend",
+        "on-click": "loginctl lock-session && systemctl suspend",
         "tooltip": true,
         "tooltip-format": "Suspend"
     },
     "custom/shutdown": {
         "format": "󰐥",
-        "on-click": "systemctl poweroff",
+        "on-click": "loginctl lock-session && systemctl hibernate",
         "tooltip": true,
         "tooltip-format": "Shutdown"
     },

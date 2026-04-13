@@ -107,7 +107,24 @@ return {
 				lsp_fallback = true,
 				async = false,
 				timeout_ms = 1000,
-			}, function(err) end)
+			}, function(err)
+				if err then
+					vim.notify("Format error: " .. err, vim.log.levels.ERROR)
+					return
+				end
+				local clients = vim.lsp.get_clients({ bufnr = 0 })
+				local formatters = conform.list_formatters(0)
+				if #formatters > 0 then
+					local names = vim.tbl_map(function(f)
+						return f.name
+					end, formatters)
+					vim.notify("Formatted with conform: " .. table.concat(names, ", "), vim.log.levels.INFO)
+				elseif #clients > 0 then
+					vim.notify("Formatted with LSP: " .. clients[1].name, vim.log.levels.INFO)
+				else
+					vim.notify("No formatter found", vim.log.levels.WARN)
+				end
+			end)
 		end, { desc = "Format file or range (in visual mode)" })
 	end,
 }

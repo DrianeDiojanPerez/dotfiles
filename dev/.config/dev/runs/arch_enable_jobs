@@ -1,0 +1,11 @@
+#!/bin/bash
+
+systemctl --user daemon-reload
+
+if ! systemctl --user is-active --quiet nvim-clear-lsp.timer; then
+    echo "nvim-clear-lsp.timer not running, enabling..."
+    systemctl --user enable --now nvim-clear-lsp.timer
+else
+    echo "nvim-clear-lsp.timer already running"
+fi
+
