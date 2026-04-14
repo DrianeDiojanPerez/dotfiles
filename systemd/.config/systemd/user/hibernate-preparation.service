@@ -1,0 +1,10 @@
+[Unit]
+Description=Hibernate preparation
+Before=systemd-hibernate.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo platforms > /sys/power/disk'
+
+[Install]
+WantedBy=systemd-hibernate.service

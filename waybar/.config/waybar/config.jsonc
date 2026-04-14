@@ -119,13 +119,13 @@
     },
     "custom/suspend": {
         "format": "⏾",
-        "on-click": "loginctl lock-session && systemctl suspend",
+        "on-click": "playerctl pause; loginctl lock-session && sleep 1 && systemctl suspend",
         "tooltip": true,
         "tooltip-format": "Suspend"
     },
     "custom/shutdown": {
         "format": "󰐥",
-        "on-click": "loginctl lock-session && systemctl hibernate",
+        "on-click": "playerctl pause; loginctl lock-session && sleep 1 && systemctl hibernate --no-block",
         "tooltip": true,
         "tooltip-format": "Shutdown"
     },
