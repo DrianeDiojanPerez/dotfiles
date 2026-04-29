@@ -22,6 +22,7 @@ return {
 				javascriptreact = { "eslint_d", "prettier" },
 				typescript = { "eslint_d", "prettier" },
 				typescriptreact = { "eslint_d", "prettier" },
+                json = { "biome" },
 				rust = function()
 					-- local cargo_toml = vim.fn.getcwd() .. "/Cargo.toml"
 					-- if vim.fn.filereadable(cargo_toml) == 1 then
