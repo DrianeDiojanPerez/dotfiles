@@ -1,7 +1,6 @@
 return {
-
 	"williamboman/mason.nvim",
-    -- "hrsh7th/cmp-buffer",
+	-- "hrsh7th/cmp-buffer",
 	dependencies = {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
@@ -26,13 +25,13 @@ return {
 			vim.lsp.protocol.make_client_capabilities(),
 			cmp_lsp.default_capabilities()
 		)
-			-- require("fidget").setup({
-			-- 	notification = {
-			-- 		window = {
-			-- 			winblend = 0,
-			-- 		},
-			-- 	},
-			-- })
+		-- require("fidget").setup({
+		-- 	notification = {
+		-- 		window = {
+		-- 			winblend = 0,
+		-- 		},
+		-- 	},
+		-- })
 		require("mason").setup({})
 		require("mason-lspconfig").setup({
 
@@ -40,6 +39,7 @@ return {
 				"astro",
 				"gopls",
 				"lua_ls",
+				"laravel_ls",
 				"rust_analyzer",
 				"intelephense",
 				"phpactor",
@@ -211,10 +211,12 @@ return {
 
 		mason_tool_installer.setup({
 			ensure_installed = {
+				"harper-ls", -- It is for grammar checking
 				"prettier", -- prettier formatter
 				"stylua", -- lua formatter
 				"isort", -- python formatter
 				"black", -- python formatter
+				"prettierd",
 				"pylint",
 				"eslint_d",
 				"gopls",
@@ -384,8 +386,8 @@ return {
 				["<C-Space>"] = cmp.mapping.complete(),
 			}),
 			sources = cmp.config.sources({
-                { name = "crates" },
-                { name = "supermaven" },
+				{ name = "crates" },
+				{ name = "supermaven" },
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
 			}, {
