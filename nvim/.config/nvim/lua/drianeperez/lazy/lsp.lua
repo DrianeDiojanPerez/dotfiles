@@ -216,6 +216,7 @@ return {
 				"stylua", -- lua formatter
 				"isort", -- python formatter
 				"black", -- python formatter
+                "phpcbf", -- php formatter
 				"prettierd",
 				"pylint",
 				"eslint_d",
