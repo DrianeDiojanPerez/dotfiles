@@ -148,3 +148,6 @@ export PATH=/home/ddperez/.opencode/bin:$PATH
 
 export EDITOR=nvim
 export SHARP_IGNORE_GLOBAL_LIBVIPS=1
+
+export FLYCTL_INSTALL="$HOME/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
