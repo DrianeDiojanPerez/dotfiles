@@ -265,6 +265,13 @@ return {
 			}),
 		})
 
+        cmp.setup.filetype({ "sql" }, {
+            sources = {
+                { name = "vim-dadbod-completion" },
+                { name = "buffer" },
+            },
+        })
+
 		-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#1e1e2e", fg = "#c0caf5" }) -- Change background & text color
 		vim.api.nvim_set_hl(0, "CmpDocumentation", { bg = "#1e1e2e", fg = "#c0caf5" }) -- Ensure cmp doc has correct color
 		vim.api.nvim_set_hl(0, "CmpDocumentationBorder", { bg = "#1e1e2e", fg = "#7aa2f7" }) -- Ensure cmp border color
