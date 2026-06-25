@@ -28,7 +28,7 @@ return {
 				"bibtex",
 				"bicep",
 				"bitbake",
-				-- "blade",
+				"blade",
 				"c",
 				"c_sharp",
 				"cairo",

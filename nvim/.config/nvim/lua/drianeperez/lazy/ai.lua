@@ -9,7 +9,7 @@ return {
 		_99.setup({
 			provider = _99.Providers.ClaudeCodeProvider,
 			-- model is optional, overrides the provider's default
-			model = "claude-opus-4-6",
+			model = "claude-opus-4-8",
 			logger = {
 				level = _99.DEBUG,
 				path = "/tmp/" .. basename .. ".99.debug",
