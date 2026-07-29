@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # https://www.youtube.com/watch?v=V1wxgWU0j0E
-#
+
 yay -S timeshift
