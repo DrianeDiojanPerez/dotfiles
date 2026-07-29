@@ -54,6 +54,7 @@ exec-once = zen-browser
 exec-once = bluemail
 exec-once = swayosd-server
 exec-once = waybar & swaync & flameshot & hypridle & blueman-applet
+# exec-once = hyprpm reload -n
 
 
 #############################
@@ -109,6 +110,20 @@ general {
 
     layout = master
 }
+
+# plugin:dynamic-cursors {
+#     enabled = true
+#     mode = none
+
+#     shake {
+#         enabled = true
+#         threshold = 6.0    # lower = triggers sooner
+#         base = 4.0         # size right after shake starts
+#         speed = 4.0        # keeps growing while you shake
+#         limit = 0.0        # 0 = no max size
+#         timeout = 2000     # ms it stays big afterwards
+#     }
+# }
 
 # https://wiki.hypr.land/Configuring/Variables/#decoration
 decoration {
@@ -397,6 +412,10 @@ windowrule = opacity 0.8 0.8, match:title Picture in picture
 windowrule = size 600 337.5, match:title Picture in picture
 windowrule = pin on, match:title Picture in picture
 
+windowrule = float on, match:class mpv
+windowrule = opacity 0.8 0.8, match:class mpv
+windowrule = size 600 337.5, match:class mpv
+windowrule = pin on, match:class mpv
 ##############################
 ### WINDOWS AND WORKSPACES ###
 ##############################
