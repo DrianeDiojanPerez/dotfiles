@@ -40,7 +40,7 @@ return {
 				"gopls",
 				"lua_ls",
 				"laravel_ls",
-				"rust_analyzer",
+				-- "rust_analyzer",
 				"intelephense",
 				"phpactor",
 				"html",
