@@ -28,7 +28,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("elephant")
     hl.exec_cmd("teams-for-linux")
     hl.exec_cmd("zen-browser")
-    hl.exec_cmd("bluemail")
+    hl.exec_cmd("thunderbird")
     hl.exec_cmd("swayosd-server")
     hl.exec_cmd("waybar & swaync & flameshot & hypridle & blueman-applet")
 end)
@@ -212,7 +212,7 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd(osdclient .. " --playerctl previous"),
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 -- Assign apps to workspaces
-hl.window_rule({ match = { class = "^BlueMail$" },        workspace = "10" })
+hl.window_rule({ match = { class = "^org.mozilla.Thunderbird$" },        workspace = "10" })
 hl.window_rule({ match = { class = "^teams-for-linux$" }, workspace = "9" })
 hl.window_rule({ match = { class = "^zen-browser$" },     workspace = "2" })
 
@@ -227,3 +227,10 @@ hl.window_rule({ match = { class = "mpv" }, float = true })
 hl.window_rule({ match = { class = "mpv" }, opacity = "0.8 0.8" })
 hl.window_rule({ match = { class = "mpv" }, size = "600 337.5" })
 hl.window_rule({ match = { class = "mpv" }, pin = true })
+
+-- Wi-Fi picker. The waybar network module launches impala under this class,
+-- so float and center it to get a popup instead of a window in the tiling
+-- layout. Sizes match what omarchy uses for the same terminal TUIs.
+hl.window_rule({ match = { class = "Impala" }, float = true })
+hl.window_rule({ match = { class = "Impala" }, center = true })
+hl.window_rule({ match = { class = "Impala" }, size = "800 600" })
