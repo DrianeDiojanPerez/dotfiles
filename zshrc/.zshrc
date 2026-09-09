@@ -151,3 +151,7 @@ export SHARP_IGNORE_GLOBAL_LIBVIPS=1
 
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
+# >>> headroom docker-native >>>
+export PATH="/home/ddperez/.local/bin:$PATH"
+# <<< headroom docker-native <<<
