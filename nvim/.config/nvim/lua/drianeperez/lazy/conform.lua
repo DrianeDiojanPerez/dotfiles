@@ -17,6 +17,7 @@ return {
 				-- php = { "pint" },
 				php = { "phpcbf" },
 				blade = { "blade-formatter" },
+                html = { "prettierd", "prettier", stop_after_first = true },
 				go = { "gofmt" },
 				astro = { "prettierd" },
 				javascript = { "eslint_d", "prettier" },
