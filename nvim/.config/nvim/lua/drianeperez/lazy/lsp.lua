@@ -38,6 +38,7 @@ return {
 			ensure_installed = {
 				"astro",
 				"gopls",
+				"templ",
 				"lua_ls",
 				"laravel_ls",
 				-- "rust_analyzer",
