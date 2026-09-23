@@ -19,6 +19,7 @@ return {
 				blade = { "blade-formatter" },
                 html = { "prettierd", "prettier", stop_after_first = true },
 				go = { "gofmt" },
+				templ = { "templ" },
 				astro = { "prettierd" },
 				javascript = { "eslint_d", "prettier" },
 				javascriptreact = { "eslint_d", "prettier" },
