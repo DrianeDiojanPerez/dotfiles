@@ -1,0 +1,6 @@
+[Unit]
+Description=Ask Claude to say hello world
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/cbin/claude-hello

@@ -1,0 +1,10 @@
+[Unit]
+Description=Run claude-hello at 4am and 2pm
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+OnCalendar=*-*-* 14:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

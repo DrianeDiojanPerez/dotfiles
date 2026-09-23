@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Ask Claude to say hello world, log it, and exit.
+
+# Full path to claude — find yours with: which claude
+CLAUDE="/home/ddperez/.local/bin/claude"
+LOG="$HOME/claude-hello.log"
+
+echo "----- $(date) -----" >> "$LOG"
+"$CLAUDE" -p "Say 'hello world' and nothing else." >> "$LOG" 2>&1
