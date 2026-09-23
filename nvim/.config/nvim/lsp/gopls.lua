@@ -76,10 +76,7 @@ end
 ---@type vim.lsp.Config
 return {
 	cmd = { "gopls" },
-	before_init = function(_, config)
-		vim.filetype.add({ extension = { templ = "templ" } })
-	end,
-	filetypes = { "go", "gomod", "gowork", "gotmpl", "templ" },
+	filetypes = { "go", "gomod", "gowork", "gotmpl" },
 	root_dir = function(bufnr, on_dir)
 		local fname = vim.api.nvim_buf_get_name(bufnr)
 		get_mod_cache_dir()
@@ -91,7 +88,6 @@ return {
 		gopls = {
 			completeUnimported = true,
 			usePlaceholders = true,
-			templateExtensions = { "templ" },
 		},
 	},
 }
