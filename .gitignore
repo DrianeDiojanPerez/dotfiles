@@ -1,2 +1,3 @@
 /tmp/*
+:memory:.ses
 /tmp
