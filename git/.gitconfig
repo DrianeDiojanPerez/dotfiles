@@ -1,0 +1,11 @@
+[user]
+	name = DrianeDiojanPerez
+	email = drianeperez12@gmail.com
+[diff]
+	algorithm = histogram
+	colorMoved = default
+[color "diff"]
+	meta = yellow
+	frag = magenta
+	old = red
+	new = green
